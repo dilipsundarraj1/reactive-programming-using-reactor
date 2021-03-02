@@ -571,6 +571,11 @@ public class FluxAndMonoGeneratorService {
         return flux;
     }
 
+    /***
+     * ALEX -> FLux(A,L,E,X)
+     * @param name
+     * @return
+     */
     private Flux<String> splitString(String name) {
         var charArray = name.split("");
         return Flux.fromArray(charArray)
