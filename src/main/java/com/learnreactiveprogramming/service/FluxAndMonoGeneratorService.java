@@ -28,7 +28,7 @@ public class FluxAndMonoGeneratorService {
     public Flux<String> namesFlux() {
         var namesList = List.of("alex", "ben", "chloe");
         //return Flux.just("alex", "ben", "chloe");
-        return Flux.fromIterable(namesList);
+        return Flux.fromIterable(namesList); // coming from a db or remote service
 
     }
 
