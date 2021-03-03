@@ -1,7 +1,6 @@
 package com.learnreactiveprogramming.service;
 
 import com.learnreactiveprogramming.exception.ReactorException;
-import com.learnreactiveprogramming.service.FluxAndMonoGeneratorService;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Hooks;
 import reactor.test.StepVerifier;
@@ -90,24 +89,26 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(namesFlux)
-                //.expectNext("A", "L", "E", "X")
-                .expectNext("0-A", "1-L", "2-E", "3-X")
+                .expectNext("A", "L", "E", "X")
+               // .expectNext("0-A", "1-L", "2-E", "3-X")
                 .expectNextCount(5)
                 .verifyComplete();
 
     }
 
     @Test
-    void namesFlux_flatmap_1() {
+    void namesFlux_flatmap_async() {
 
         //given
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_flatmap_1(stringLength).log();
+        var namesFlux = fluxAndMonoGeneratorService.namesFlux_flatmap_async(stringLength).log();
 
         //then
         StepVerifier.create(namesFlux)
+                /*.expectNext("0-A", "1-L", "2-E", "3-X")
+                .expectNextCount(5)*/
                 .expectNextCount(9)
                 .verifyComplete();
 
@@ -124,8 +125,8 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(namesFlux)
-                //.expectNext("A", "L", "E", "X")
-                .expectNext("0-A", "1-L", "2-E", "3-X")
+                .expectNext("A", "L", "E", "X")
+                //expectNext("0-A", "1-L", "2-E", "3-X")
                 .expectNextCount(5)
                 .verifyComplete();
 
@@ -143,7 +144,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(namesFlux)
-                .expectNext("0-A", "1-L", "2-E", "3-X")
+                .expectNext("A", "L", "E", "X")
                 .expectNextCount(5)
                 .verifyComplete();
 
