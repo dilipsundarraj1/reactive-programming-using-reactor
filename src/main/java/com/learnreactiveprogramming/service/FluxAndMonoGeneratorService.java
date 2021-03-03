@@ -64,7 +64,7 @@ public class FluxAndMonoGeneratorService {
 
     /**
      * @param stringLength
-     * @return A, L, E, X, C, H, L , O, E
+     *
      */
     public Flux<String> namesFlux_flatmap(int stringLength) {
         var namesList = List.of("alex", "ben", "chloe"); // a, l, e , x
@@ -72,19 +72,18 @@ public class FluxAndMonoGeneratorService {
                 //.map(s -> s.toUpperCase())
                 .map(String::toUpperCase)
                 .filter(s -> s.length() > stringLength)
-                //.flatMap((name)-> splitString(name));
+                // ALEX,CHLOE -> A, L, E, X, C, H, L , O, E
                 .flatMap(this::splitString);
 
 
     }
 
-    public Flux<String> namesFlux_flatmap_1(int stringLength) {
+    public Flux<String> namesFlux_flatmap_async(int stringLength) {
         var namesList = List.of("alex", "ben", "chloe"); // a, l, e , x
         return Flux.fromIterable(namesList)
                 //.map(s -> s.toUpperCase())
                 .map(String::toUpperCase)
                 .filter(s -> s.length() > stringLength)
-                //.flatMap((name)-> splitString(name));
                 .flatMap(this::splitString_withDelay);
 
 
@@ -177,7 +176,7 @@ public class FluxAndMonoGeneratorService {
                 .delayElements(Duration.ofMillis(100));
 
         var defFlux = Flux.just("D", "E", "F")
-                .delayElements(Duration.ofMillis(150));
+                .delayElements(Duration.ofMillis(125));
 
         return Flux.merge(abcFlux, defFlux).log();
 
@@ -192,7 +191,7 @@ public class FluxAndMonoGeneratorService {
                 .delayElements(Duration.ofMillis(100));
 
         var defFlux = Flux.just("D", "E", "F")
-                .delayElements(Duration.ofMillis(150));
+                .delayElements(Duration.ofMillis(125));
 
         return abcFlux.mergeWith(defFlux).log();
 
@@ -578,19 +577,14 @@ public class FluxAndMonoGeneratorService {
      */
     private Flux<String> splitString(String name) {
         var charArray = name.split("");
-        return Flux.fromArray(charArray)
-                .index()
-                .map((tuple2) -> tuple2.getT1() + "-" + tuple2.getT2())
-                ;
+        return Flux.fromArray(charArray);
     }
 
     private Flux<String> splitString_withDelay(String name) {
+        var delay = new Random().nextInt(1000);
         var charArray = name.split("");
         return Flux.fromArray(charArray)
-                .index()
-                .map((tuple2) -> tuple2.getT1() + "-" + tuple2.getT2())
-                .concatMap(this::delayString)
-                ;
+                .delayElements(Duration.ofMillis(delay));
     }
 
     private Flux<String> delayString(String string) {
