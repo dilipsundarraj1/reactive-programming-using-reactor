@@ -107,7 +107,7 @@ public class FluxAndMonoGeneratorService {
 
         var namesList = List.of("alex", "ben", "chloe"); // a, l, e , x
         return Flux.fromIterable(namesList)
-                .transform(filterMap)
+                .transform(filterMap) // gives u the opportunity to combine multiple operations using a single call.
                 .flatMap(this::splitString);
         //using "map" would give the return type as Flux<Flux<String>
 
