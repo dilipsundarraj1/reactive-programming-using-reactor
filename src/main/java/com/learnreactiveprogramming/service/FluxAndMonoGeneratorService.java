@@ -44,13 +44,36 @@ public class FluxAndMonoGeneratorService {
     public Flux<String> namesFlux_map(int stringLength) {
         var namesList = List.of("alex", "ben", "chloe");
         //return Flux.just("alex", "ben", "chloe");
+
+        //Flux.empty()
         return Flux.fromIterable(namesList)
                 //.map(s -> s.toUpperCase())
                 .map(String::toUpperCase)
                .delayElements(Duration.ofMillis(500))
                 .filter(s -> s.length() > stringLength)
-                .map(s -> s.length() + "-" + s);
+                .map(s -> s.length() + "-" + s)
+               .defaultIfEmpty("default");
     }
+
+    public Flux<String> namesFlux_map_swithIfEmpty(int stringLength) {
+        var namesList = List.of("alex", "ben", "chloe");
+        //return Flux.just("alex", "ben", "chloe");
+
+        Function<Flux<String>, Flux<String>> filterMap = name -> name.map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength)
+                .map(s -> s.length() + "-" + s);
+
+        var defaultFlux = Flux.just("default")
+                .transform(filterMap);
+
+        //Flux.empty()
+        return Flux.fromIterable(namesList)
+                //.map(s -> s.toUpperCase())
+               .transform(filterMap)
+                .switchIfEmpty(defaultFlux);
+    }
+
+
 
 /*    public Flux<String> namesFlux_map1(int stringLength) {
         var namesList = List.of("alex", "ben", "chloe");
@@ -136,6 +159,7 @@ public class FluxAndMonoGeneratorService {
                 .defaultIfEmpty("Default");
 
     }
+
 
     public Mono<String> name_switchIfEmpty() {
 
@@ -634,6 +658,15 @@ public class FluxAndMonoGeneratorService {
         return Mono.just("alex");
 
     }
+
+    public Mono<String> namesMono_map_filter(int stirngLength) {
+        return Mono.just("alex")
+                .map(String::toUpperCase)
+                .filter(s-> s.length() > stirngLength)
+                .defaultIfEmpty("default");
+
+    }
+
 
     public Flux<Integer> generateLongFlux(int maxNum) {
 
