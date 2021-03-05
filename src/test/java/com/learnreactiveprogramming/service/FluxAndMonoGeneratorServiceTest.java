@@ -111,39 +111,6 @@ class FluxAndMonoGeneratorServiceTest {
     }
 
     @Test
-    void namesFlux_map_1() {
-
-        //given
-        int stringLength = 6;
-
-        //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_map(stringLength).log();
-
-        //then
-        StepVerifier.create(namesFlux)
-                .expectNext("default")
-                .verifyComplete();
-
-    }
-
-    @Test
-    void namesFlux_map_swithIfEmpty() {
-
-        //given
-        int stringLength = 6;
-
-        //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_map_swithIfEmpty(stringLength).log();
-
-        //then
-        StepVerifier.create(namesFlux)
-                .expectNext("7-DEFAULT")
-                .verifyComplete();
-
-    }
-
-
-    @Test
     void namesFlux_flatmap() {
 
         //given
@@ -209,6 +176,40 @@ class FluxAndMonoGeneratorServiceTest {
         StepVerifier.create(namesFlux)
                 .expectNext("A", "L", "E", "X")
                 .expectNextCount(5)
+                .verifyComplete();
+
+    }
+
+    @Test
+    void namesFlux_transform_1() {
+
+        //given
+        int stringLength = 6;
+
+        //when
+        var namesFlux = fluxAndMonoGeneratorService.namesFlux_transform(stringLength).log();
+
+        //then
+        StepVerifier.create(namesFlux)
+                .expectNext("default")
+                //.expectNextCount(5)
+                .verifyComplete();
+
+    }
+
+    @Test
+    void namesFlux_transform_switchIfEmpty() {
+
+        //given
+        int stringLength = 6;
+
+        //when
+        var namesFlux = fluxAndMonoGeneratorService.namesFlux_transform_switchIfEmpty(stringLength).log();
+
+        //then
+        StepVerifier.create(namesFlux)
+                .expectNext("D","E","F","A","U","L","T")
+                //.expectNextCount(5)
                 .verifyComplete();
 
     }
