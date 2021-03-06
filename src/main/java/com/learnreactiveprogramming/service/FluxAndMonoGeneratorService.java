@@ -234,6 +234,19 @@ public class FluxAndMonoGeneratorService {
 
     }
 
+    // "A", "D", "B", "E", "C", "F"
+    // Flux is subscribed early
+    public Flux<String> explore_mergeWith_mono() {
+
+        var aMono = Mono.just("A");
+
+        var bMono = Flux.just("B");
+
+        return aMono.mergeWith(bMono);
+
+
+    }
+
     // "A","B","C","D","E","F"
     // Flux is subscribed early
     public Flux<String> explore_mergeSequential() {

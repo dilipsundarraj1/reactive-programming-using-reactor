@@ -341,6 +341,22 @@ class FluxAndMonoGeneratorServiceTest {
     }
 
     @Test
+    void explore_mergeWith_mono() {
+
+        //given
+
+        //when
+        var value = fluxAndMonoGeneratorService.explore_mergeWith_mono();
+
+        //then
+        StepVerifier.create(value)
+
+                .expectNext("A", "B")
+                .verifyComplete();
+
+    }
+
+    @Test
     void explore_mergeSequential() {
 
         //given
