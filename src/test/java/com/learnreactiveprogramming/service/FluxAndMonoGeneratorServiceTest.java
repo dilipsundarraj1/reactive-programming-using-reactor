@@ -276,17 +276,34 @@ class FluxAndMonoGeneratorServiceTest {
 
     }
 
+
+
     @Test
     void explore_concatWith() {
 
         //given
 
         //when
-        var value = fluxAndMonoGeneratorService.explore_concatWith();
+        var concatFlux = fluxAndMonoGeneratorService.explore_concatWith();
 
         //then
-        StepVerifier.create(value)
+        StepVerifier.create(concatFlux)
                 .expectNext("A", "B", "C", "D", "E", "F")
+                .verifyComplete();
+
+    }
+
+    @Test
+    void explore_concat_mono() {
+
+        //given
+
+        //when
+        var concatFlux = fluxAndMonoGeneratorService.explore_concatWith_mono();
+
+        //then
+        StepVerifier.create(concatFlux)
+                .expectNext("A", "B")
                 .verifyComplete();
 
     }

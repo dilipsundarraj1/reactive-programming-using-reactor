@@ -181,6 +181,7 @@ public class FluxAndMonoGeneratorService {
 
     }
 
+
     // "A", "B", "C", "D", "E", "F"
     public Flux<String> explore_concatWith() {
 
@@ -190,6 +191,16 @@ public class FluxAndMonoGeneratorService {
 
         return abcFlux.concatWith(defFlux).log();
 
+
+    }
+
+    public Flux<String> explore_concatWith_mono() {
+
+        var aMono = Mono.just("A");
+
+        var bMono = Flux.just("B");
+
+        return aMono.concatWith(bMono);
 
     }
 
