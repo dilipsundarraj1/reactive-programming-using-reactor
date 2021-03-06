@@ -417,6 +417,21 @@ class FluxAndMonoGeneratorServiceTest {
     }
 
     @Test
+    void explore_zipWith_mono() {
+
+        //given
+
+        //when
+        var zipFlux = fluxAndMonoGeneratorService.explore_zipWith_mono().log();
+
+        //then
+        StepVerifier.create(zipFlux)
+                .expectNext("AB")
+                .verifyComplete();
+
+    }
+
+    @Test
     void exception_flux() {
 
         //given

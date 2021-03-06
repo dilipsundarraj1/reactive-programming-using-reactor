@@ -234,8 +234,6 @@ public class FluxAndMonoGeneratorService {
 
     }
 
-    // "A", "D", "B", "E", "C", "F"
-    // Flux is subscribed early
     public Flux<String> explore_mergeWith_mono() {
 
         var aMono = Mono.just("A");
@@ -295,6 +293,18 @@ public class FluxAndMonoGeneratorService {
         var defFlux = Flux.just("D", "E", "F");
 
         return abcFlux.zipWith(defFlux, (first, second) -> first + second);
+
+
+    }
+
+    public Mono<String> explore_zipWith_mono() {
+
+        var aMono = Mono.just("A");
+
+        var bMono = Mono.just("B");
+
+        return aMono.zipWith(bMono)
+                .map(t2->t2.getT1()+t2.getT2());
 
 
     }
