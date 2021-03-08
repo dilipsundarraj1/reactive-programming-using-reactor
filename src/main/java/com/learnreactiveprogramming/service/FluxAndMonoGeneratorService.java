@@ -285,6 +285,17 @@ public class FluxAndMonoGeneratorService {
 
     }
 
+    public Flux<String> explore_zip_2() {
+
+        var aMono = Mono.just("A");
+        var bMono = Mono.just("B");
+
+
+        return Flux.zip(aMono,bMono, (first, second) -> first + second);
+
+
+    }
+
     // AD, BE, CF
     public Flux<String> explore_zipWith() {
 

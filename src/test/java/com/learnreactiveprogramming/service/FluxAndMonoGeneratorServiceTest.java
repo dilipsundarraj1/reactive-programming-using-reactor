@@ -401,6 +401,22 @@ class FluxAndMonoGeneratorServiceTest {
 
     }
 
+
+    @Test
+    void explore_zip_2() {
+
+        //given
+
+        //when
+        var zipFlux = fluxAndMonoGeneratorService.explore_zip_2().log();
+
+        //then
+        StepVerifier.create(zipFlux)
+                .expectNext("AB")
+                .verifyComplete();
+
+    }
+
     @Test
     void explore_zipWith() {
 
