@@ -284,10 +284,10 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var concatFlux = fluxAndMonoGeneratorService.explore_concatWith();
+        var value = fluxAndMonoGeneratorService.explore_concatWith();
 
         //then
-        StepVerifier.create(concatFlux)
+        StepVerifier.create(value)
                 .expectNext("A", "B", "C", "D", "E", "F")
                 .verifyComplete();
 
@@ -299,10 +299,10 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var concatFlux = fluxAndMonoGeneratorService.explore_concatWith_mono();
+        var value = fluxAndMonoGeneratorService.explore_concatWith_mono();
 
         //then
-        StepVerifier.create(concatFlux)
+        StepVerifier.create(value)
                 .expectNext("A", "B")
                 .verifyComplete();
 
@@ -377,10 +377,10 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var zipFlux = fluxAndMonoGeneratorService.explore_zip().log();
+        var value = fluxAndMonoGeneratorService.explore_zip().log();
 
         //then
-        StepVerifier.create(zipFlux)
+        StepVerifier.create(value)
                 .expectNext("AD","BE", "CF")
                 .verifyComplete();
 
@@ -392,10 +392,10 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var zipFlux = fluxAndMonoGeneratorService.explore_zip_1().log();
+        var value = fluxAndMonoGeneratorService.explore_zip_1().log();
 
         //then
-        StepVerifier.create(zipFlux)
+        StepVerifier.create(value)
                 .expectNext("AD14","BE25", "CF36")
                 .verifyComplete();
 
@@ -408,10 +408,10 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var zipFlux = fluxAndMonoGeneratorService.explore_zip_2().log();
+        var value = fluxAndMonoGeneratorService.explore_zip_2().log();
 
         //then
-        StepVerifier.create(zipFlux)
+        StepVerifier.create(value)
                 .expectNext("AB")
                 .verifyComplete();
 
@@ -423,10 +423,10 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var zipFlux = fluxAndMonoGeneratorService.explore_zipWith().log();
+        var value = fluxAndMonoGeneratorService.explore_zipWith().log();
 
         //then
-        StepVerifier.create(zipFlux)
+        StepVerifier.create(value)
                 .expectNext("AD","BE", "CF")
                 .verifyComplete();
 
@@ -438,10 +438,10 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var zipFlux = fluxAndMonoGeneratorService.explore_zipWith_mono().log();
+        var value = fluxAndMonoGeneratorService.explore_zipWith_mono().log();
 
         //then
-        StepVerifier.create(zipFlux)
+        StepVerifier.create(value)
                 .expectNext("AB")
                 .verifyComplete();
 

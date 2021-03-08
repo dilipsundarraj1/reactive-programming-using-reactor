@@ -104,6 +104,15 @@ public class FluxAndMonoGeneratorService {
 
     }
 
+/*    public Flux<String> namesMono_flatmap(int stringLength) {
+        return Mono.just("alex")
+                //.map(s -> s.toUpperCase())
+                .map(String::toUpperCase)
+                .filter(s -> s.length() > stringLength)
+                // ALEX,CHLOE -> A, L, E, X, C, H, L , O, E
+                .flatMap(this::splitString);
+    }*/
+
     public Flux<String> namesFlux_transform(int stringLength) {
 
         Function<Flux<String>, Flux<String>> filterMap = name -> name.map(String::toUpperCase)
