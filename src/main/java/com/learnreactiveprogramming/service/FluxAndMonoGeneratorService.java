@@ -55,15 +55,19 @@ public class FluxAndMonoGeneratorService {
                .defaultIfEmpty("default");
     }
 
+    public Mono<String> namesMono() {
+        return Mono.just("alex");
 
-/*    public Flux<String> namesFlux_map1(int stringLength) {
-        var namesList = List.of("alex", "ben", "chloe");
-        //return Flux.just("alex", "ben", "chloe");
-        return Flux.fromIterable(namesList)
-                //.map(s -> s.toUpperCase())
-                .map((s) -> Mono.just(s));
+    }
 
-    }*/
+    public Mono<String> namesMono_map_filter(int stirngLength) {
+        return Mono.just("alex")
+                .map(String::toUpperCase)
+                .filter(s-> s.length() > stirngLength)
+                .defaultIfEmpty("default");
+
+    }
+
 
 
     /**
@@ -111,6 +115,13 @@ public class FluxAndMonoGeneratorService {
                 .flatMap(this::splitStringMono);
     }
 
+    public Flux<String> namesMono_flatmapMany(int stringLength) {
+        return Mono.just("alex")
+                //.map(s -> s.toUpperCase())
+                .map(String::toUpperCase)
+                .flatMapMany(this::splitString_withDelay);
+    }
+
     private Mono<List<String>> splitStringMono(String s) {
         var charArray = s.split("");
         return  Mono.just(List.of(charArray))
@@ -132,6 +143,8 @@ public class FluxAndMonoGeneratorService {
 
     }
 
+
+
     public Flux<String> namesFlux_transform_switchIfEmpty(int stringLength) {
 
         Function<Flux<String>, Flux<String>> filterMap = name -> name.map(String::toUpperCase)
@@ -148,8 +161,6 @@ public class FluxAndMonoGeneratorService {
         //using "map" would give the return type as Flux<Flux<String>
 
     }
-
-
 
 
     public Flux<String> namesFlux_transform_concatwith(int stringLength) {
@@ -666,7 +677,6 @@ public class FluxAndMonoGeneratorService {
 
     private Flux<String> splitString_withDelay(String name) {
         var delay = new Random().nextInt(1000);
-       // var delay = 1000;
         var charArray = name.split("");
         return Flux.fromArray(charArray)
                 .delayElements(Duration.ofMillis(delay));
@@ -715,18 +725,6 @@ public class FluxAndMonoGeneratorService {
         return Flux.range(0, max);
     }
 
-    public Mono<String> namesMono() {
-        return Mono.just("alex");
-
-    }
-
-    public Mono<String> namesMono_map_filter(int stirngLength) {
-        return Mono.just("alex")
-                .map(String::toUpperCase)
-                .filter(s-> s.length() > stirngLength)
-                .defaultIfEmpty("default");
-
-    }
 
 
     public Flux<Integer> generateLongFlux(int maxNum) {

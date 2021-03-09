@@ -180,6 +180,22 @@ class FluxAndMonoGeneratorServiceTest {
 
     }
 
+    @Test
+    void namesMono_flatmapMany() {
+
+        //given
+        int stringLength = 3;
+
+        //when
+        var namesFlux = fluxAndMonoGeneratorService.namesMono_flatmapMany(stringLength).log();
+
+        //then
+        StepVerifier.create(namesFlux)
+                .expectNext("A", "L", "E", "X")
+                .verifyComplete();
+
+    }
+
 
     @Test
     void namesFlux_transform() {
