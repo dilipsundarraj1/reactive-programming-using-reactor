@@ -104,14 +104,19 @@ public class FluxAndMonoGeneratorService {
 
     }
 
-/*    public Flux<String> namesMono_flatmap(int stringLength) {
+    public Mono<List<String>> namesMono_flatmap(int stringLength) {
         return Mono.just("alex")
                 //.map(s -> s.toUpperCase())
                 .map(String::toUpperCase)
-                .filter(s -> s.length() > stringLength)
-                // ALEX,CHLOE -> A, L, E, X, C, H, L , O, E
-                .flatMap(this::splitString);
-    }*/
+                .flatMap(this::splitStringMono);
+    }
+
+    private Mono<List<String>> splitStringMono(String s) {
+        var charArray = s.split("");
+        return  Mono.just(List.of(charArray))
+                .delayElement(Duration.ofSeconds(1));
+    }
+
 
     public Flux<String> namesFlux_transform(int stringLength) {
 

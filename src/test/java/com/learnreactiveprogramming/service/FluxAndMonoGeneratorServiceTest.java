@@ -6,6 +6,8 @@ import reactor.core.publisher.Hooks;
 import reactor.test.StepVerifier;
 import reactor.tools.agent.ReactorDebugAgent;
 
+import java.util.List;
+
 class FluxAndMonoGeneratorServiceTest {
 
     FluxAndMonoGeneratorService fluxAndMonoGeneratorService = new FluxAndMonoGeneratorService();
@@ -158,6 +160,22 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNext("A", "L", "E", "X")
                 //expectNext("0-A", "1-L", "2-E", "3-X")
                 .expectNextCount(5)
+                .verifyComplete();
+
+    }
+
+    @Test
+    void namesMono_flatmap() {
+
+        //given
+        int stringLength = 3;
+
+        //when
+        var namesFlux = fluxAndMonoGeneratorService.namesMono_flatmap(stringLength).log();
+
+        //then
+        StepVerifier.create(namesFlux)
+                .expectNext(List.of("A", "L", "E", "X"))
                 .verifyComplete();
 
     }
