@@ -19,16 +19,17 @@ public class MovieInfoService {
     }
 
     public MovieInfoService(){
+
     }
 
-/*
     public Flux<MovieInfo> retrieveAllMovieInfo(){
 
-
-
+        return webClient.get().uri("/movie_infos")
+                .retrieve()
+                .bodyToFlux(MovieInfo.class)
+                .log();
 
     }
-*/
 
 
 

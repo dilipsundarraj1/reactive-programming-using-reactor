@@ -17,6 +17,12 @@ dependencies {
     //webclient-dependencies
     implementation 'org.springframework:spring-webflux:5.3.4'
     implementation 'io.projectreactor.netty:reactor-netty:1.0.4'
+    //jackson dependencies
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.1'
 
 
     //log - logback
