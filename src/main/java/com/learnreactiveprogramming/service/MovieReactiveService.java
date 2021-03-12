@@ -36,15 +36,15 @@ public class MovieReactiveService {
 
     public Flux<Movie> getAllMovies() {
 
-        var moviesFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.movieInfoFlux();
 
-        var movies = moviesFlux
-                .flatMap((movie -> {
+        var movies = movieInfoFlux
+                .flatMap((movieInfo -> {
                     Mono<List<Review>> reviewsMono =
-                            reviewService.retrieveReviewsFlux(movie.getMovieId())
+                            reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie(movie.getMovieId(), movie, movieList));
+                            .map(movieList -> new Movie( movieInfo, movieList));
                 }))
                 .onErrorMap((ex) -> {
                     System.out.println("Exception is " + ex);;
@@ -57,14 +57,14 @@ public class MovieReactiveService {
 
     public Flux<Movie> getAllMovies_retry() {
 
-        var moviesFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.movieInfoFlux();
 
-        var movies = moviesFlux
-                .flatMap((movie -> {
-                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movie.getMovieId())
+        var movies = movieInfoFlux
+                .flatMap((movieInfo -> {
+                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie(movie.getMovieId(), movie, movieList));
+                            .map(movieList -> new Movie(movieInfo, movieList));
                 }))
                 .onErrorMap((ex) -> {
                     System.out.println("Exception is " + ex);
@@ -92,14 +92,14 @@ public class MovieReactiveService {
 
         //var retryWhen = Retry.backoff(3, Duration.ofMillis(500));
 
-        var moviesFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.movieInfoFlux();
 
-        var movies = moviesFlux
-                .flatMap((movie -> {
-                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movie.getMovieId())
+        var movies = movieInfoFlux
+                .flatMap((movieInfo -> {
+                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie(movie.getMovieId(), movie, movieList));
+                            .map(movieList -> new Movie( movieInfo, movieList));
                 }))
 
                 .onErrorMap((ex) -> {
@@ -118,14 +118,14 @@ public class MovieReactiveService {
     public Flux<Movie> getAllMovies_repeat() {
 
 
-        var moviesFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.movieInfoFlux();
 
-        var movies = moviesFlux
-                .flatMap((movie -> {
-                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movie.getMovieId())
+        var movies = movieInfoFlux
+                .flatMap((movieInfo -> {
+                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie(movie.getMovieId(), movie, movieList));
+                            .map(movieList -> new Movie( movieInfo, movieList));
                 }))
                 .onErrorMap((ex) -> {
                     System.out.println("Exception is " + ex);
@@ -144,14 +144,14 @@ public class MovieReactiveService {
     public Flux<Movie> getAllMovies_repeatN(long n) {
 
 
-        var moviesFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.movieInfoFlux();
 
-        var movies = moviesFlux
-                .flatMap((movie -> {
-                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movie.getMovieId())
+        var movies = movieInfoFlux
+                .flatMap((movieInfo -> {
+                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie(movie.getMovieId(), movie, movieList));
+                            .map(movieList -> new Movie( movieInfo, movieList));
                 }))
                 .onErrorMap((ex) -> {
                     System.out.println("Exception is " + ex);
@@ -171,14 +171,14 @@ public class MovieReactiveService {
 
         //var retryWhen = Retry.backoff(3, Duration.ofMillis(500));
 
-        var moviesFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.movieInfoFlux();
 
-        var movies = moviesFlux
-                .flatMap((movie -> {
-                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movie.getMovieId())
+        var movies = movieInfoFlux
+                .flatMap((movieInfo -> {
+                    Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie(movie.getMovieId(), movie, movieList));
+                            .map(movieList -> new Movie( movieInfo, movieList));
                 }))
                 .onErrorMap((ex) -> {
                     System.out.println("Exception is " + ex);
@@ -200,8 +200,8 @@ public class MovieReactiveService {
         return Flux.create(sink -> {
             CompletableFuture.supplyAsync(() -> movieInfoService.movieList())
                     .thenAccept((movieInfos -> movieInfos.forEach(movieInfo -> {
-                        List<Review> reviewsList = reviewService.retrieveReviews(movieInfo.getMovieId());
-                        sink.next(new Movie(movieInfo.getMovieId(), movieInfo, reviewsList));
+                        List<Review> reviewsList = reviewService.retrieveReviews(movieInfo.getMovieInfoId());
+                        sink.next(new Movie( movieInfo, reviewsList));
                     })))
                     .thenRun(sink::complete);
         });
@@ -213,7 +213,7 @@ public class MovieReactiveService {
         var reviewList = reviewService.retrieveReviewsFlux(movieId)
                 .collectList();
 
-        return movieInfoMono.zipWith(reviewList, (movienfo, reviews) -> new Movie(movieId, movienfo, reviews));
+        return movieInfoMono.zipWith(reviewList, (movienfo, reviews) -> new Movie( movienfo, reviews));
     }
 
     public Mono<Movie> getMovieInfoById_withRevenue(long movieId) {
@@ -224,7 +224,7 @@ public class MovieReactiveService {
         var revenueMono = Mono.fromCallable(() -> revenueService.getRevenue(movieId))
                 .subscribeOn(Schedulers.boundedElastic());
 
-        return movieInfoMono.zipWith(reviewList, (movieInfo, reviews) -> new Movie(movieId, movieInfo, reviews))
+        return movieInfoMono.zipWith(reviewList, (movieInfo, reviews) -> new Movie(movieInfo, reviews))
                 .zipWith(revenueMono, ((movie, revenue) -> {
                     movie.setRevenue(revenue);
                     return movie;
@@ -241,7 +241,7 @@ public class MovieReactiveService {
             });
 
             movieInfoFuture.thenCombine(reviewsFuture, (movieInfo, reviews) -> {
-                return new Movie(movieId, movieInfo, reviews);
+                return new Movie( movieInfo, reviews);
             })
                     .thenAccept(movie -> {
                         sink.success(movie);
