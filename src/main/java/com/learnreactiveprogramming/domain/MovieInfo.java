@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MovieInfo {
-    private Long movieId;
     private Long movieInfoId;
     private String name;
     private Integer year;
