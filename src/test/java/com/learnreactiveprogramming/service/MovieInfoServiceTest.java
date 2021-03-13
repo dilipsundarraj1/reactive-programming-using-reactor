@@ -30,4 +30,23 @@ class MovieInfoServiceTest {
                 .expectNextCount(6)
                 .verifyComplete();
     }
+
+    @Test
+    void retrieveMovieInfoById() {
+
+        //given
+        int movieInfoId = 1;
+
+        //when
+        var movieInfoFlux = movieInfoService.retrieveMovieInfoById(movieInfoId);
+
+        //then
+        StepVerifier.create(movieInfoFlux)
+                //.expectNextCount(7)
+                .assertNext( movieInfo ->
+                        assertEquals("Batman Begins", movieInfo.getName())
+
+                )
+                .verifyComplete();
+    }
 }

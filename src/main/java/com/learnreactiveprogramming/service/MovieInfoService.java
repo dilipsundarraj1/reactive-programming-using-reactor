@@ -31,6 +31,16 @@ public class MovieInfoService {
 
     }
 
+    public Flux<MovieInfo> retrieveMovieInfoById(int movieInfoId){
+
+        return webClient.get().uri("/movie_infos/{id}", movieInfoId)
+                .retrieve()
+                .bodyToFlux(MovieInfo.class)
+                .log();
+
+    }
+
+
 
 
     public  Flux<MovieInfo> movieInfoFlux(){
