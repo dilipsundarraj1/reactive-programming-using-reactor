@@ -1,20 +1,22 @@
 package com.learnreactiveprogramming.service;
 
 import com.learnreactiveprogramming.domain.Movie;
-import com.learnreactiveprogramming.service.MovieInfoService;
-import com.learnreactiveprogramming.service.MovieReactiveService;
-import com.learnreactiveprogramming.service.RevenueService;
-import com.learnreactiveprogramming.service.ReviewService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
 class MovieReactiveServiceTest {
 
-    MovieInfoService mis = new MovieInfoService();
-    ReviewService rs = new ReviewService();
+    WebClient webClient = WebClient.builder()
+            .baseUrl("http://localhost:8080/movies")
+            .build();
+    MovieInfoService mis = new MovieInfoService(webClient);
+    ReviewService rs = new ReviewService(webClient);
     RevenueService revenueService = new RevenueService();
     MovieReactiveService movieReactiveService = new MovieReactiveService(mis, rs,revenueService);
 
@@ -29,16 +31,16 @@ class MovieReactiveServiceTest {
         //then
         StepVerifier.create(moviesInfo)
                 .assertNext(movieInfo -> {
-                    assertEquals("Batman Begins", movieInfo.getMovie().getName());
+                    assertEquals("Batman Begins", movieInfo.getMovieInfo().getName());
                     assertEquals(movieInfo.getReviewList().size(), 2);
 
                 })
                 .assertNext(movieInfo -> {
-                    assertEquals("The Dark Knight", movieInfo.getMovie().getName());
+                    assertEquals("The Dark Knight", movieInfo.getMovieInfo().getName());
                     assertEquals(movieInfo.getReviewList().size(), 2);
                 })
                 .assertNext(movieInfo -> {
-                    assertEquals("Dark Knight Rises", movieInfo.getMovie().getName());
+                    assertEquals("Dark Knight Rises", movieInfo.getMovieInfo().getName());
                     assertEquals(movieInfo.getReviewList().size(), 2);
                 })
                 .verifyComplete();
@@ -56,16 +58,16 @@ class MovieReactiveServiceTest {
         //then
         StepVerifier.create(moviesInfo)
                 .assertNext(movieInfo -> {
-                    assertEquals("Batman Begins", movieInfo.getMovie().getName());
+                    assertEquals("Batman Begins", movieInfo.getMovieInfo().getName());
                     assertEquals(movieInfo.getReviewList().size(), 2);
 
                 })
                 .assertNext(movieInfo -> {
-                    assertEquals("The Dark Knight", movieInfo.getMovie().getName());
+                    assertEquals("The Dark Knight", movieInfo.getMovieInfo().getName());
                     assertEquals(movieInfo.getReviewList().size(), 2);
                 })
                 .assertNext(movieInfo -> {
-                    assertEquals("Dark Knight Rises", movieInfo.getMovie().getName());
+                    assertEquals("Dark Knight Rises", movieInfo.getMovieInfo().getName());
                     assertEquals(movieInfo.getReviewList().size(), 2);
                 })
                 .verifyComplete();
@@ -79,12 +81,12 @@ class MovieReactiveServiceTest {
         long movieId = 1L;
 
         //when
-        Mono<Movie> movieMono = movieReactiveService.getMovieInfoById(movieId);
+        Mono<Movie> movieMono = movieReactiveService.getMovieById(movieId);
 
         //then
         StepVerifier.create(movieMono)
                 .assertNext(movieInfo -> {
-                    assertEquals("Batman Begins", movieInfo.getMovie().getName());
+                    assertEquals("Batman Begins", movieInfo.getMovieInfo().getName());
                     assertEquals(movieInfo.getReviewList().size(), 2);
                 })
                 .verifyComplete();
@@ -97,12 +99,12 @@ class MovieReactiveServiceTest {
         long movieId = 1L;
 
         //when
-        Mono<Movie> movieMono = movieReactiveService.getMovieInfoById_withRevenue(movieId);
+        Mono<Movie> movieMono = movieReactiveService.getMovieById_withRevenue(movieId);
 
         //then
         StepVerifier.create(movieMono)
                 .assertNext(movie -> {
-                    assertEquals("Batman Begins", movie.getMovie().getName());
+                    assertEquals("Batman Begins", movie.getMovieInfo().getName());
                     assertEquals(movie.getReviewList().size(), 2);
                 })
                 .verifyComplete();
@@ -115,12 +117,12 @@ class MovieReactiveServiceTest {
         long movieId = 1L;
 
         //when
-        Mono<Movie> movieMono = movieReactiveService.getMovieInfoById_1(movieId);
+        Mono<Movie> movieMono = movieReactiveService.getMovieById_1(movieId);
 
         //then
         StepVerifier.create(movieMono)
                 .assertNext(movie -> {
-                    assertEquals("Batman Begins", movie.getMovie().getName());
+                    assertEquals("Batman Begins", movie.getMovieInfo().getName());
                     assertEquals(movie.getReviewList().size(), 2);
                     //assertNotNull(movie.getRevenue());
                 })
@@ -128,4 +130,21 @@ class MovieReactiveServiceTest {
     }
 
 
+    @Test
+    @Disabled
+    void getAllMovies_RestClient() {
+        //given
+
+        //when
+        var moviesFlux = movieReactiveService.getAllMovies_RestClient();
+
+        //then
+        StepVerifier.create(moviesFlux)
+                .assertNext(movie -> {
+                    assertEquals("Batman Begins", movie.getMovieInfo().getName());
+                    assertEquals("Nolan is the real superhero", movie.getReviewList().get(0).getComment());
+                })
+                .expectNextCount(6)
+                .verifyComplete();
+    }
 }

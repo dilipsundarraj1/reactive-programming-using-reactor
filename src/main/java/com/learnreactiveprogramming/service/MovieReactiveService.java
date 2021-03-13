@@ -55,6 +55,27 @@ public class MovieReactiveService {
         return movies;
     }
 
+    public Flux<Movie> getAllMovies_RestClient() {
+
+        var movieInfoFlux = movieInfoService.retrieveAllMovieInfo();
+
+        var movies = movieInfoFlux
+                .flatMap((movieInfo -> {
+                    Mono<List<Review>> reviewsMono =
+                            reviewService.retrieveReviewById_RestClient(movieInfo.getMovieInfoId())
+                                    .collectList();
+                    return reviewsMono
+                            .map(movieList -> new Movie( movieInfo, movieList));
+                }))
+                .onErrorMap((ex) -> {
+                    System.out.println("Exception is " + ex);;
+                    log.error("Exception is : ", ex);
+                    throw new MovieException(ex.getMessage());
+                });
+
+        return movies;
+    }
+
     public Flux<Movie> getAllMovies_retry() {
 
         var movieInfoFlux = movieInfoService.movieInfoFlux();
@@ -207,7 +228,7 @@ public class MovieReactiveService {
         });
     }
 
-    public Mono<Movie> getMovieInfoById(long movieId) {
+    public Mono<Movie> getMovieById(long movieId) {
 
         var movieInfoMono = movieInfoService.retrieveMovieInfoMonoUsingId(movieId);
         var reviewList = reviewService.retrieveReviewsFlux(movieId)
@@ -216,7 +237,7 @@ public class MovieReactiveService {
         return movieInfoMono.zipWith(reviewList, (movienfo, reviews) -> new Movie( movienfo, reviews));
     }
 
-    public Mono<Movie> getMovieInfoById_withRevenue(long movieId) {
+    public Mono<Movie> getMovieById_withRevenue(long movieId) {
 
         var movieInfoMono = movieInfoService.retrieveMovieInfoMonoUsingId(movieId);
         var reviewList = reviewService.retrieveReviewsFlux(movieId)
@@ -231,7 +252,7 @@ public class MovieReactiveService {
                 }));
     }
 
-    public Mono<Movie> getMovieInfoById_1(long movieId) {
+    public Mono<Movie> getMovieById_1(long movieId) {
 
         Mono<Movie> movieMono = Mono.create((sink) -> {
             var movieInfoFuture = CompletableFuture.supplyAsync(() -> movieInfoService.retrieveMovieUsingId(movieId));
