@@ -40,10 +40,7 @@ public class MovieInfoService {
 
     }
 
-
-
-
-    public  Flux<MovieInfo> movieInfoFlux(){
+    public  Flux<MovieInfo> retrieveMoviesFlux(){
 
         var movieInfoList = List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")),
                 new MovieInfo(101L,"The Dark Knight", 2008, List.of("Christian Bale", "HeathLedger"), LocalDate.parse("2008-07-18")),

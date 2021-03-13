@@ -3,9 +3,6 @@ package com.learnreactiveprogramming.service;
 import com.learnreactiveprogramming.domain.MovieInfo;
 import com.learnreactiveprogramming.exception.NetworkException;
 import com.learnreactiveprogramming.exception.ServiceException;
-import com.learnreactiveprogramming.service.MovieInfoService;
-import com.learnreactiveprogramming.service.MovieReactiveService;
-import com.learnreactiveprogramming.service.ReviewService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,7 +33,7 @@ public class MovieReactiveServiceMockTest {
     void getAllMovieInfo() {
 
         //given
-        when(movieInfoService.movieInfoFlux()).thenCallRealMethod();
+        when(movieInfoService.retrieveMoviesFlux()).thenCallRealMethod();
         when(reviewService.retrieveReviewsFlux(anyLong())).thenCallRealMethod();
 
         //when
@@ -57,7 +54,7 @@ public class MovieReactiveServiceMockTest {
 
         //given
         var errorMessage = "Exception Occurred in Review Service";
-        when(movieInfoService.movieInfoFlux()).thenCallRealMethod();
+        when(movieInfoService.retrieveMoviesFlux()).thenCallRealMethod();
         when(reviewService.retrieveReviewsFlux(anyLong())).thenThrow(new RuntimeException(errorMessage));
 
         //when
@@ -81,7 +78,7 @@ public class MovieReactiveServiceMockTest {
 
         //given
         var errorMessage = "Exception Occurred in Review Service";
-        when(movieInfoService.movieInfoFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
+        when(movieInfoService.retrieveMoviesFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
         when(reviewService.retrieveReviewsFlux(anyLong())).thenThrow(new RuntimeException(errorMessage));
 
         //when
@@ -107,7 +104,7 @@ public class MovieReactiveServiceMockTest {
 
         //given
         var errorMessage = "Exception Occurred in Review Service";
-        when(movieInfoService.movieInfoFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
+        when(movieInfoService.retrieveMoviesFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
         when(reviewService.retrieveReviewsFlux(anyLong())).thenThrow(new NetworkException(errorMessage));
 
         //when
@@ -127,7 +124,7 @@ public class MovieReactiveServiceMockTest {
 
         //given
         var errorMessage = "Exception Occurred in Review Service";
-        when(movieInfoService.movieInfoFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
+        when(movieInfoService.retrieveMoviesFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
         when(reviewService.retrieveReviewsFlux(anyLong())).thenThrow(new ServiceException(errorMessage));
 
         //when
@@ -146,7 +143,7 @@ public class MovieReactiveServiceMockTest {
     void getAllMovies_repeat() {
 
         //given
-        when(movieInfoService.movieInfoFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
+        when(movieInfoService.retrieveMoviesFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
         when(reviewService.retrieveReviewsFlux(anyLong())).thenCallRealMethod();
 
         //when
@@ -168,7 +165,7 @@ public class MovieReactiveServiceMockTest {
 
         //given
         long n = 2;
-        when(movieInfoService.movieInfoFlux()).thenCallRealMethod();
+        when(movieInfoService.retrieveMoviesFlux()).thenCallRealMethod();
         when(reviewService.retrieveReviewsFlux(anyLong())).thenCallRealMethod();
 
         //when
@@ -190,7 +187,7 @@ public class MovieReactiveServiceMockTest {
 
         //given
         var errorMessage = "Exception Occurred in Review Service";
-        when(movieInfoService.movieInfoFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
+        when(movieInfoService.retrieveMoviesFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
         when(reviewService.retrieveReviewsFlux(anyLong())).thenThrow(new NetworkException(errorMessage));
 
 
@@ -212,7 +209,7 @@ public class MovieReactiveServiceMockTest {
 
         //given
         var errorMessage = "Exception Occurred in Review Service";
-        when(movieInfoService.movieInfoFlux()).thenCallRealMethod();
+        when(movieInfoService.retrieveMoviesFlux()).thenCallRealMethod();
         when(reviewService.retrieveReviewsFlux(anyLong())).thenCallRealMethod();
 
         //when

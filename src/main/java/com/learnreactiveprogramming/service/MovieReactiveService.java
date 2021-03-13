@@ -36,7 +36,7 @@ public class MovieReactiveService {
 
     public Flux<Movie> getAllMovies() {
 
-        var movieInfoFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.retrieveMoviesFlux();
 
         var movies = movieInfoFlux
                 .flatMap((movieInfo -> {
@@ -78,7 +78,7 @@ public class MovieReactiveService {
 
     public Flux<Movie> getAllMovies_retry() {
 
-        var movieInfoFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.retrieveMoviesFlux();
 
         var movies = movieInfoFlux
                 .flatMap((movieInfo -> {
@@ -113,7 +113,7 @@ public class MovieReactiveService {
 
         //var retryWhen = Retry.backoff(3, Duration.ofMillis(500));
 
-        var movieInfoFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.retrieveMoviesFlux();
 
         var movies = movieInfoFlux
                 .flatMap((movieInfo -> {
@@ -139,7 +139,7 @@ public class MovieReactiveService {
     public Flux<Movie> getAllMovies_repeat() {
 
 
-        var movieInfoFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.retrieveMoviesFlux();
 
         var movies = movieInfoFlux
                 .flatMap((movieInfo -> {
@@ -165,7 +165,7 @@ public class MovieReactiveService {
     public Flux<Movie> getAllMovies_repeatN(long n) {
 
 
-        var movieInfoFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.retrieveMoviesFlux();
 
         var movies = movieInfoFlux
                 .flatMap((movieInfo -> {
@@ -192,7 +192,7 @@ public class MovieReactiveService {
 
         //var retryWhen = Retry.backoff(3, Duration.ofMillis(500));
 
-        var movieInfoFlux = movieInfoService.movieInfoFlux();
+        var movieInfoFlux = movieInfoService.retrieveMoviesFlux();
 
         var movies = movieInfoFlux
                 .flatMap((movieInfo -> {
