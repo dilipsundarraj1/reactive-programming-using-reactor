@@ -110,9 +110,9 @@ public class FluxAndMonoGeneratorService {
 
     public Mono<List<String>> namesMono_flatmap(int stringLength) {
         return Mono.just("alex")
-                //.map(s -> s.toUpperCase())
                 .map(String::toUpperCase)
-                .flatMap(this::splitStringMono);
+                .filter(s-> s.length() > stringLength)
+                .flatMap(this::splitStringMono); //Mono<List of A, L, E  X>
     }
 
     public Flux<String> namesMono_flatmapMany(int stringLength) {
