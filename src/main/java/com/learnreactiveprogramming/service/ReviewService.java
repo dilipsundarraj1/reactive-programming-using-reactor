@@ -18,7 +18,7 @@ public class ReviewService {
     public ReviewService() {
     }
 
-    public Flux<Review> retrieveAllReviews(){
+    public Flux<Review> retrieveAllReviews_RestClient(){
         return webClient.get().uri("/v1/reviews")
                 .retrieve()
                 .bodyToFlux(Review.class)
@@ -26,7 +26,7 @@ public class ReviewService {
 
     }
 
-    public Flux<Review>  retrieveReviewById(Long reviewId) {
+    public Flux<Review> retrieveReviewById_RestClient(Long reviewId) {
         return webClient.get().uri("/v1/reviews/{id}", reviewId)
                 .retrieve()
                 .bodyToFlux(Review.class)

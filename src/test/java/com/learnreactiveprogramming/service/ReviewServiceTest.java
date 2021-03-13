@@ -1,11 +1,13 @@
 package com.learnreactiveprogramming.service;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.test.StepVerifier;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 class ReviewServiceTest {
 
     WebClient webClient = WebClient.builder()
@@ -19,7 +21,7 @@ class ReviewServiceTest {
         //given
 
         //when
-        var reviewsFlux = reviewService.retrieveAllReviews();
+        var reviewsFlux = reviewService.retrieveAllReviews_RestClient();
 
         //then
         StepVerifier.create(reviewsFlux)
@@ -36,7 +38,7 @@ class ReviewServiceTest {
         Long reviewId = 1L;
 
         //when
-        var reviewsFlux = reviewService.retrieveReviewById(reviewId);
+        var reviewsFlux = reviewService.retrieveReviewById_RestClient(reviewId);
 
         //then
         StepVerifier.create(reviewsFlux)
