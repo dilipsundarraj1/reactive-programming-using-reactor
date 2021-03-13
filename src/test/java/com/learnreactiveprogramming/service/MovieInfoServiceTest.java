@@ -35,7 +35,7 @@ class MovieInfoServiceTest {
     void retrieveMovieInfoById() {
 
         //given
-        int movieInfoId = 1;
+        Long movieInfoId = 1L;
 
         //when
         var movieInfoFlux = movieInfoService.retrieveMovieInfoById(movieInfoId);
