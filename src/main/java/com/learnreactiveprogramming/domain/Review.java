@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Review {
     private Long reviewId;
-    private Long movie_info_id;
+    private Long movieInfoId;
     private String comment;
     private Double rating;
 }
