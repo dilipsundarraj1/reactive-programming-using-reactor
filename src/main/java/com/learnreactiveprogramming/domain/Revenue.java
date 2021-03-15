@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class Revenue {
-    private Long movie_info_id;
+    private Long movieInfoId;
     private double budget;
     private double boxOffice;
 }
