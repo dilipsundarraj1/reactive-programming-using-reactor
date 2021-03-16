@@ -44,7 +44,7 @@ public class MovieReactiveService {
                             reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie( movieInfo, movieList));
+                            .map(reviewList -> new Movie( movieInfo, reviewList));
                 }))
                 .onErrorMap((ex) -> {
                     System.out.println("Exception is " + ex);;
