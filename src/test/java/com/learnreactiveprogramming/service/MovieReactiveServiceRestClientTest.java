@@ -18,7 +18,7 @@ public class MovieReactiveServiceRestClientTest {
     MovieReactiveService movieReactiveService = new MovieReactiveService(mis, rs,revenueService);
 
     @Test
-   // @Disabled
+    @Disabled
     void getAllMovies_RestClient() {
         //given
 
