@@ -93,6 +93,24 @@ class MovieReactiveServiceTest {
     }
 
     @Test
+    void getMovieById_usingFlatMap() {
+
+        //given
+        long movieId = 1L;
+
+        //when
+        Mono<Movie> movieMono = movieReactiveService.getMovieById_usingFlatMap(movieId);
+
+        //then
+        StepVerifier.create(movieMono)
+                .assertNext(movieInfo -> {
+                    assertEquals("Batman Begins", movieInfo.getMovieInfo().getName());
+                    assertEquals(movieInfo.getReviewList().size(), 2);
+                })
+                .verifyComplete();
+    }
+
+    @Test
     void getMovieInfoById_withRevenue() {
 
         //given
