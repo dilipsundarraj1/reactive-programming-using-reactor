@@ -60,7 +60,8 @@ public class MovieReactiveService {
         var movieInfoFlux = movieInfoService.retrieveAllMovieInfo();
 
         var movies = movieInfoFlux
-                .flatMap((movieInfo -> {
+                //.flatMap((movieInfo -> {
+                .flatMapSequential((movieInfo -> {
                     Mono<List<Review>> reviewsMono =
                             reviewService.retrieveReviewById_RestClient(movieInfo.getMovieInfoId())
                                     .collectList();
@@ -71,7 +72,8 @@ public class MovieReactiveService {
                     System.out.println("Exception is " + ex);;
                     log.error("Exception is : ", ex);
                     throw new MovieException(ex.getMessage());
-                });
+                })
+               ;
 
         return movies;
     }
