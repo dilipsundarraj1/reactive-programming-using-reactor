@@ -52,6 +52,19 @@ public class FluxAndMonoGeneratorService {
                .delayElements(Duration.ofMillis(500))
                 .filter(s -> s.length() > stringLength)
                 .map(s -> s.length() + "-" + s)
+                .doOnNext(name -> {
+                    System.out.println("name is : "+ name);
+                    name = name.toLowerCase();
+                })
+                .doOnSubscribe(s->{
+                    System.out.println("Subscription  is : "+ s);
+                })
+                .doOnComplete(()->{
+                    System.out.println("Completed sending all the items.");
+                })
+                .doFinally((signalType)->{
+                    System.out.println("value is : "+ signalType );
+                })
                .defaultIfEmpty("default");
     }
 
