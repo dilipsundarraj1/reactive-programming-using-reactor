@@ -406,6 +406,32 @@ public class FluxAndMonoGeneratorService {
 
     }
 
+    /**
+     * This helps to drop elements thats causing the issue and move on with the other elements
+     *
+     * @return
+     */
+    public Flux<String> explore_OnErrorContinue() {
+
+        var flux = Flux.just("A", "B", "C")
+                .map(name -> {
+                    if (name.equals("B")) {
+                        throw new IllegalStateException("Exception Occurred");
+                    }
+                    return name;
+                })
+                .concatWith(Flux.just("D"))
+                .onErrorContinue((exception, value) -> {
+                    System.out.println("Value is : " + value);
+                    System.out.println("Exception is : " + exception.getMessage());
+                });
+
+
+        return flux;
+
+    }
+
+
 
     /**
      * Used to tranform the error from one type to another
@@ -416,7 +442,12 @@ public class FluxAndMonoGeneratorService {
     public Flux<String> explore_OnErrorMap(Exception e) {
 
         var flux = Flux.just("A", "B", "C")
-                .concatWith(Flux.error(e))
+                .map(name -> {
+                    if (name.equals("B")) {
+                        throw new IllegalStateException("Exception Occurred");
+                    }
+                    return name;
+                })
                 .onErrorMap((exception) -> {
                    // log.error("Exception is : " , exception);
                     // difference between errorResume and this one is that you dont need to add
@@ -477,29 +508,6 @@ public class FluxAndMonoGeneratorService {
 
     }
 
-    /**
-     * This helps to drop elements thats causing the issue and move on with the other elements
-     *
-     * @return
-     */
-    public Flux<String> explore_OnErrorContinue() {
-
-        var flux = Flux.just("A", "B", "C")
-                .map(name -> {
-                    if (name.equals("B")) {
-                        throw new IllegalStateException("Exception Occurred");
-                    }
-                    return name;
-                })
-                .onErrorContinue((exception, value) -> {
-                    System.out.println("Value is : " + value);
-                    System.out.println("Exception is : " + exception.getMessage());
-                });
-
-
-        return flux;
-
-    }
 
 
 
