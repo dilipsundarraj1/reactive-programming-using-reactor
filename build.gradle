@@ -9,6 +9,8 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven { url "https://repository.mulesoft.org/nexus/content/repositories/public/" }
+
 }
 
 dependencies {
@@ -37,6 +39,11 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test:3.4.0")
     testImplementation("org.mockito:mockito-core:3.2.4")
     testImplementation("org.mockito:mockito-junit-jupiter:3.2.4")
+
+    //wiremock
+    testImplementation "com.github.tomakehurst:wiremock-jre8-standalone:2.24.1"
+    implementation "com.github.JensPiegsa:wiremock-extension:0.4.0"
+
 }
 
 test {
