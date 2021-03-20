@@ -3,6 +3,7 @@ package com.learnreactiveprogramming.service;
 import com.learnreactiveprogramming.domain.MovieInfo;
 import com.learnreactiveprogramming.domain.Review;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
@@ -26,8 +27,14 @@ public class ReviewService {
 
     }
 
-    public Flux<Review> retrieveReviewById_RestClient(Long reviewId) {
-        return webClient.get().uri("/v1/reviews/{id}", reviewId)
+    public Flux<Review> retrieveReviewsFlux_RestClient(Long movieInfoId) {
+
+        var uri = UriComponentsBuilder.fromUriString("/v1/reviews")
+                .queryParam("movieInfoId", movieInfoId)
+                .buildAndExpand()
+                .toUriString();
+
+        return webClient.get().uri(uri)
                 .retrieve()
                 .bodyToFlux(Review.class)
                 .log();

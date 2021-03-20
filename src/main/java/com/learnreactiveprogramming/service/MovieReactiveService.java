@@ -57,13 +57,13 @@ public class MovieReactiveService {
 
     public Flux<Movie> getAllMovies_RestClient() {
 
-        var movieInfoFlux = movieInfoService.retrieveAllMovieInfo();
+        var movieInfoFlux = movieInfoService.retrieveAllMovieInfo_RestClient();
 
         var movies = movieInfoFlux
                 //.flatMap((movieInfo -> {
                 .flatMapSequential((movieInfo -> {
                     Mono<List<Review>> reviewsMono =
-                            reviewService.retrieveReviewById_RestClient(movieInfo.getMovieInfoId())
+                            reviewService.retrieveReviewsFlux_RestClient(movieInfo.getMovieInfoId())
                                     .collectList();
                     return reviewsMono
                             .map(movieList -> new Movie( movieInfo, movieList));
@@ -250,6 +250,15 @@ public class MovieReactiveService {
                             .map(movieList -> new Movie( movieInfo, movieList));
 
                 });
+    }
+
+    public Mono<Movie> getMovieById_RestClient(long movieId) {
+
+        var movieInfoMono = movieInfoService.retrieveMovieInfoById_RestClient(movieId);
+        var reviewList = reviewService.retrieveReviewsFlux_RestClient(movieId)
+                .collectList();
+
+        return movieInfoMono.zipWith(reviewList, (movienfo, reviews) -> new Movie( movienfo, reviews));
     }
 
     public Mono<Movie> getMovieById_withRevenue(long movieId) {
