@@ -38,7 +38,7 @@ class ReviewServiceTest {
         Long reviewId = 1L;
 
         //when
-        var reviewsFlux = reviewService.retrieveReviewById_RestClient(reviewId);
+        var reviewsFlux = reviewService.retrieveReviewsFlux_RestClient(reviewId);
 
         //then
         StepVerifier.create(reviewsFlux)

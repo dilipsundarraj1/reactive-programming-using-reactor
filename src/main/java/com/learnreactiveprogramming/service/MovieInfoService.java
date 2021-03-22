@@ -22,7 +22,7 @@ public class MovieInfoService {
 
     }
 
-    public Flux<MovieInfo> retrieveAllMovieInfo(){
+    public Flux<MovieInfo> retrieveAllMovieInfo_RestClient(){
 
         return webClient.get().uri("/v1/movie_infos")
                 .retrieve()
@@ -31,11 +31,11 @@ public class MovieInfoService {
 
     }
 
-    public Flux<MovieInfo> retrieveMovieInfoById(Long movieInfoId){
+    public Mono<MovieInfo> retrieveMovieInfoById_RestClient(Long movieInfoId){
 
-        return webClient.get().uri("/movie_infos/{id}", movieInfoId)
+        return webClient.get().uri("/v1/movie_infos/{id}", movieInfoId)
                 .retrieve()
-                .bodyToFlux(MovieInfo.class)
+                .bodyToMono(MovieInfo.class)
                 .log();
 
     }

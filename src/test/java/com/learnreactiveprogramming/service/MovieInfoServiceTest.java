@@ -20,7 +20,7 @@ class MovieInfoServiceTest {
         //given
 
         //when
-        var movieInfoFlux = movieInfoService.retrieveAllMovieInfo();
+        var movieInfoFlux = movieInfoService.retrieveAllMovieInfo_RestClient();
 
         //then
         StepVerifier.create(movieInfoFlux)
@@ -40,7 +40,7 @@ class MovieInfoServiceTest {
         Long movieInfoId = 1L;
 
         //when
-        var movieInfoFlux = movieInfoService.retrieveMovieInfoById(movieInfoId);
+        var movieInfoFlux = movieInfoService.retrieveMovieInfoById_RestClient(movieInfoId);
 
         //then
         StepVerifier.create(movieInfoFlux)
