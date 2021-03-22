@@ -49,23 +49,23 @@ public class FluxAndMonoGeneratorService {
         return Flux.fromIterable(namesList)
                 //.map(s -> s.toUpperCase())
                 .map(String::toUpperCase)
-               .delayElements(Duration.ofMillis(500))
+                .delayElements(Duration.ofMillis(500))
                 .filter(s -> s.length() > stringLength)
                 .map(s -> s.length() + "-" + s)
                 .doOnNext(name -> {
-                    System.out.println("name is : "+ name);
+                    System.out.println("name is : " + name);
                     name = name.toLowerCase();
                 })
-                .doOnSubscribe(s->{
-                    System.out.println("Subscription  is : "+ s);
+                .doOnSubscribe(s -> {
+                    System.out.println("Subscription  is : " + s);
                 })
-                .doOnComplete(()->{
+                .doOnComplete(() -> {
                     System.out.println("Completed sending all the items.");
                 })
-                .doFinally((signalType)->{
-                    System.out.println("value is : "+ signalType );
+                .doFinally((signalType) -> {
+                    System.out.println("value is : " + signalType);
                 })
-               .defaultIfEmpty("default");
+                .defaultIfEmpty("default");
     }
 
     public Mono<String> namesMono() {
@@ -76,16 +76,14 @@ public class FluxAndMonoGeneratorService {
     public Mono<String> namesMono_map_filter(int stirngLength) {
         return Mono.just("alex")
                 .map(String::toUpperCase)
-                .filter(s-> s.length() > stirngLength)
+                .filter(s -> s.length() > stirngLength)
                 .defaultIfEmpty("default");
 
     }
 
 
-
     /**
      * @param stringLength
-     *
      */
     public Flux<String> namesFlux_flatmap(int stringLength) {
         var namesList = List.of("alex", "ben", "chloe"); // a, l, e , x
@@ -124,7 +122,7 @@ public class FluxAndMonoGeneratorService {
     public Mono<List<String>> namesMono_flatmap(int stringLength) {
         return Mono.just("alex")
                 .map(String::toUpperCase)
-                .filter(s-> s.length() > stringLength)
+                .filter(s -> s.length() > stringLength)
                 .flatMap(this::splitStringMono); //Mono<List of A, L, E  X>
     }
 
@@ -137,7 +135,7 @@ public class FluxAndMonoGeneratorService {
 
     private Mono<List<String>> splitStringMono(String s) {
         var charArray = s.split("");
-        return  Mono.just(List.of(charArray))
+        return Mono.just(List.of(charArray))
                 .delayElement(Duration.ofSeconds(1));
     }
 
@@ -155,7 +153,6 @@ public class FluxAndMonoGeneratorService {
         //using "map" would give the return type as Flux<Flux<String>
 
     }
-
 
 
     public Flux<String> namesFlux_transform_switchIfEmpty(int stringLength) {
@@ -329,7 +326,7 @@ public class FluxAndMonoGeneratorService {
         var bMono = Mono.just("B");
 
 
-        return Flux.zip(aMono,bMono, (first, second) -> first + second);
+        return Flux.zip(aMono, bMono, (first, second) -> first + second);
 
 
     }
@@ -353,7 +350,7 @@ public class FluxAndMonoGeneratorService {
         var bMono = Mono.just("B");
 
         return aMono.zipWith(bMono)
-                .map(t2->t2.getT1()+t2.getT2());
+                .map(t2 -> t2.getT1() + t2.getT2());
 
 
     }
@@ -395,7 +392,7 @@ public class FluxAndMonoGeneratorService {
         var flux = Flux.just("A", "B", "C")
                 .concatWith(Flux.error(e))
                 .onErrorResume((exception) -> {
-                    log.error("Exception is " ,exception);
+                    log.error("Exception is ", exception);
                     if (exception instanceof IllegalStateException)
                         return recoveryFlux;
                     else
@@ -432,7 +429,6 @@ public class FluxAndMonoGeneratorService {
     }
 
 
-
     /**
      * Used to tranform the error from one type to another
      *
@@ -449,12 +445,11 @@ public class FluxAndMonoGeneratorService {
                     return name;
                 })
                 .onErrorMap((exception) -> {
-                   // log.error("Exception is : " , exception);
+                    // log.error("Exception is : " , exception);
                     // difference between errorResume and this one is that you dont need to add
                     // Flux.error() to throw the exception
                     return new ReactorException(exception, exception.getMessage());
-                })
-                ;
+                });
 
         return flux;
 
@@ -473,12 +468,11 @@ public class FluxAndMonoGeneratorService {
                 .concatWith(Flux.error(e))
                 .checkpoint("errorspot")
                 .onErrorMap((exception) -> {
-                    log.error("Exception is : " , exception);
+                    log.error("Exception is : ", exception);
                     // difference between errorResume and this one is that you dont need to add
                     // Flux.error() to throw the exception
                     return new ReactorException(exception, exception.getMessage());
-                })
-                ;
+                });
 
 
         return flux;
@@ -486,12 +480,12 @@ public class FluxAndMonoGeneratorService {
     }
 
 
-    public void exception(){
-        try{
+    public void exception() {
+        try {
             // code statements
-        }catch (Exception e){
+        } catch (Exception e) {
             //log the exception
-            throw  e;
+            throw e;
         }
     }
 
@@ -509,26 +503,28 @@ public class FluxAndMonoGeneratorService {
     }
 
 
+    public Mono<Object> exception_mono_exception() {
 
-
-    public Mono<Object> exception_mono() {
-
-        var mono = Mono.error(new RuntimeException("Exception Occurred"));
+        var mono = Mono.just("B")
+                .map(value -> {
+                    throw new RuntimeException("Exception Occurred");
+                });
         return mono;
 
     }
 
 
-
     /**
      * This operator can be used to provide a default value when an error occurs
-     * @param e
+     *
      * @return
      */
-    public Mono<Object> exception_mono_onErrorReturn(Exception e) {
+    public Mono<Object> exception_mono_onErrorReturn() {
 
-        var mono = Mono.error(e);
-        return mono.onErrorReturn("abc");
+        return Mono.just("B")
+                .map(value -> {
+                    throw new RuntimeException("Exception Occurred");
+                }).onErrorReturn("abc");
     }
 
 
@@ -552,26 +548,29 @@ public class FluxAndMonoGeneratorService {
 
     /**
      * This operator can be used to map the exception to another user defined or custom exception
+     *
      * @param e
      * @return
      */
     public Mono<Object> exception_mono_onErrorMap(Exception e) {
 
-        var mono = Mono.error(e);
-        return mono.onErrorMap(ex -> {
-            System.out.println("Exception is " + ex);
-            return new ReactorException(ex, ex.getMessage());
-        });
+        return Mono.just("B")
+                .map(value -> {
+                    throw new RuntimeException("Exception Occurred");
+                }).onErrorMap(ex -> {
+                    System.out.println("Exception is " + ex);
+                    return new ReactorException(ex, ex.getMessage());
+                });
     }
 
     /**
      * This operator allows the reactive stream to continue emitting elements when an error occured in the flow
+     *
      * @return
      */
-    public Mono<String> exception_mono_onErrorContinue() {
+    public Mono<String> exception_mono_onErrorContinue(String input) {
 
-        var mono = Mono.just("abc");
-        return mono.
+        return Mono.just(input).
                 map(data -> {
                     if (data.equals("abc"))
                         throw new RuntimeException("Exception Occurred");
@@ -579,11 +578,10 @@ public class FluxAndMonoGeneratorService {
                         return data;
                 }).
                 onErrorContinue((ex, val) -> {
-                    System.out.println("Exception is " + ex);
-                    System.out.println("Value that caused the exceptipon is " + val);
+                    log.error("Exception is " + ex);
+                    log.error("Value that caused the exception is " + val);
 
-                })
-                .defaultIfEmpty("def");
+                });
     }
 
 
@@ -745,7 +743,6 @@ public class FluxAndMonoGeneratorService {
 
         return Flux.range(0, max);
     }
-
 
 
     public Flux<Integer> generateLongFlux(int maxNum) {

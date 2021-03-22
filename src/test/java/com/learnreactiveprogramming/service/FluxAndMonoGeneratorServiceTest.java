@@ -712,7 +712,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono();
+        var mono=fluxAndMonoGeneratorService.exception_mono_exception();
 
         //then
         StepVerifier.create(mono)
@@ -727,7 +727,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono();
+        var mono=fluxAndMonoGeneratorService.exception_mono_exception();
 
         //then
         StepVerifier.create(mono)
@@ -756,11 +756,10 @@ class FluxAndMonoGeneratorServiceTest {
     void exception_mono_onErrorReturn() {
 
         //given
-        var e = new IllegalStateException("Not a valid state");
 
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorReturn(e);
+        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorReturn();
 
         //then
         StepVerifier.create(mono)
@@ -788,13 +787,28 @@ class FluxAndMonoGeneratorServiceTest {
     void exception_mono_onErrorContinue() {
 
         //given
+        var input = "abc";
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorContinue();
+        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorContinue(input);
 
         //then
         StepVerifier.create(mono)
-                .expectNext("def")
+                .verifyComplete();
+    }
+
+    @Test
+    void exception_mono_onErrorContinue_1() {
+
+        //given
+        var input = "reactor";
+
+        //when
+        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorContinue(input);
+
+        //then
+        StepVerifier.create(mono)
+                .expectNext(input)
                 .verifyComplete();
     }
 

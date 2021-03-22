@@ -42,12 +42,13 @@ public class MovieReactiveService {
                 .flatMap((movieInfo -> {
                     Mono<List<Review>> reviewsMono =
                             reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
-                            .collectList();
+                                    .collectList();
                     return reviewsMono
-                            .map(reviewList -> new Movie( movieInfo, reviewList));
+                            .map(reviewList -> new Movie(movieInfo, reviewList));
                 }))
                 .onErrorMap((ex) -> {
-                    System.out.println("Exception is " + ex);;
+                    System.out.println("Exception is " + ex);
+                    ;
                     log.error("Exception is : ", ex);
                     throw new MovieException(ex.getMessage());
                 });
@@ -66,14 +67,14 @@ public class MovieReactiveService {
                             reviewService.retrieveReviewById_RestClient(movieInfo.getMovieInfoId())
                                     .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie( movieInfo, movieList));
+                            .map(movieList -> new Movie(movieInfo, movieList));
                 }))
                 .onErrorMap((ex) -> {
-                    System.out.println("Exception is " + ex);;
+                    System.out.println("Exception is " + ex);
+                    ;
                     log.error("Exception is : ", ex);
                     throw new MovieException(ex.getMessage());
-                })
-               ;
+                });
 
         return movies;
     }
@@ -122,7 +123,7 @@ public class MovieReactiveService {
                     Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie( movieInfo, movieList));
+                            .map(movieList -> new Movie(movieInfo, movieList));
                 }))
 
                 .onErrorMap((ex) -> {
@@ -148,7 +149,7 @@ public class MovieReactiveService {
                     Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie( movieInfo, movieList));
+                            .map(movieList -> new Movie(movieInfo, movieList));
                 }))
                 .onErrorMap((ex) -> {
                     System.out.println("Exception is " + ex);
@@ -174,7 +175,7 @@ public class MovieReactiveService {
                     Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie( movieInfo, movieList));
+                            .map(movieList -> new Movie(movieInfo, movieList));
                 }))
                 .onErrorMap((ex) -> {
                     System.out.println("Exception is " + ex);
@@ -201,7 +202,7 @@ public class MovieReactiveService {
                     Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie( movieInfo, movieList));
+                            .map(movieList -> new Movie(movieInfo, movieList));
                 }))
                 .onErrorMap((ex) -> {
                     System.out.println("Exception is " + ex);
@@ -224,7 +225,7 @@ public class MovieReactiveService {
             CompletableFuture.supplyAsync(() -> movieInfoService.movieList())
                     .thenAccept((movieInfos -> movieInfos.forEach(movieInfo -> {
                         List<Review> reviewsList = reviewService.retrieveReviews(movieInfo.getMovieInfoId());
-                        sink.next(new Movie( movieInfo, reviewsList));
+                        sink.next(new Movie(movieInfo, reviewsList));
                     })))
                     .thenRun(sink::complete);
         });
@@ -236,7 +237,13 @@ public class MovieReactiveService {
         var reviewList = reviewService.retrieveReviewsFlux(movieId)
                 .collectList();
 
-        return movieInfoMono.zipWith(reviewList, (movienfo, reviews) -> new Movie( movienfo, reviews));
+        return movieInfoMono.zipWith(reviewList, (movienfo, reviews) -> new Movie(movienfo, reviews))
+                .onErrorMap((ex) -> {
+                    System.out.println("Exception is " + ex);
+                    ;
+                    log.error("Exception is : ", ex);
+                    throw new MovieException(ex.getMessage());
+                });
     }
 
     public Mono<Movie> getMovieById_usingFlatMap(long movieId) {
@@ -247,7 +254,7 @@ public class MovieReactiveService {
                     Mono<List<Review>> reviewsMono = reviewService.retrieveReviewsFlux(movieInfo.getMovieInfoId())
                             .collectList();
                     return reviewsMono
-                            .map(movieList -> new Movie( movieInfo, movieList));
+                            .map(movieList -> new Movie(movieInfo, movieList));
 
                 });
     }
@@ -277,7 +284,7 @@ public class MovieReactiveService {
             });
 
             movieInfoFuture.thenCombine(reviewsFuture, (movieInfo, reviews) -> {
-                return new Movie( movieInfo, reviews);
+                return new Movie(movieInfo, reviews);
             })
                     .thenAccept(movie -> {
                         sink.success(movie);
