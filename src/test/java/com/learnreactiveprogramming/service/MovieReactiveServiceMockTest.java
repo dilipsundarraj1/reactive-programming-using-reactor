@@ -6,6 +6,7 @@ import com.learnreactiveprogramming.exception.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
@@ -20,10 +21,10 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class MovieReactiveServiceMockTest {
 
-    @Spy
+    @Mock
     MovieInfoService movieInfoService;
 
-    @Spy
+    @Mock
     ReviewService reviewService;
 
     @InjectMocks
@@ -37,9 +38,7 @@ public class MovieReactiveServiceMockTest {
         when(reviewService.retrieveReviewsFlux(anyLong())).thenCallRealMethod();
 
         //when
-
         var movieFlux  =  reactiveMovieService.getAllMovies();
-
 
         //then
         StepVerifier.create(movieFlux)
