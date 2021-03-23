@@ -142,7 +142,7 @@ public class MovieReactiveServiceMockTest {
     void getAllMovies_repeat() {
 
         //given
-        when(movieInfoService.retrieveMoviesFlux()).thenReturn(Flux.fromIterable(List.of(new MovieInfo(100l, "Batman Begins", 2005, List.of("Christian Bale", "Michael Cane"), LocalDate.parse("2005-06-15")))));
+        when(movieInfoService.retrieveMoviesFlux()).thenCallRealMethod();
         when(reviewService.retrieveReviewsFlux(anyLong())).thenCallRealMethod();
 
         //when
@@ -173,8 +173,7 @@ public class MovieReactiveServiceMockTest {
         //then
         StepVerifier.create(movieFlux)
                 .expectNextCount(9)
-                .thenCancel()
-                .verify();
+                .verifyComplete();
 
 
         verify(reviewService, times(9)).retrieveReviewsFlux(isA(Long.class));
