@@ -59,22 +59,4 @@ class MovieInfoServiceWireMockTest {
                 .verifyComplete();
     }
 
-    @Test
-    void retrieveMovieInfoById() {
-
-        //given
-        Long movieInfoId = 1L;
-
-        //when
-        var movieInfoFlux = movieInfoService.retrieveMovieInfoById_RestClient(movieInfoId);
-
-        //then
-        StepVerifier.create(movieInfoFlux)
-                //.expectNextCount(7)
-                .assertNext( movieInfo ->
-                        assertEquals("Batman Begins", movieInfo.getName())
-
-                )
-                .verifyComplete();
-    }
 }

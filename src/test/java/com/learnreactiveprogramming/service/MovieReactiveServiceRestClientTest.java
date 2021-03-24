@@ -36,23 +36,6 @@ public class MovieReactiveServiceRestClientTest {
     }
 
     @Test
-    void getAllMovies_RestClient_Wiremock() {
-        //given
-
-        //when
-        var moviesFlux = movieReactiveService.getAllMovies_RestClient();
-
-        //then
-        StepVerifier.create(moviesFlux)
-                .assertNext(movie -> {
-                    assertEquals("Batman Begins", movie.getMovieInfo().getName());
-                    assertEquals("Nolan is the real superhero", movie.getReviewList().get(0).getComment());
-                })
-                .expectNextCount(6)
-                .verifyComplete();
-    }
-
-    @Test
     @Disabled
     void getMovieById_RestClient() {
 

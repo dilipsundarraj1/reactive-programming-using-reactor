@@ -73,11 +73,23 @@ public class MovieReactiveServiceWireMockTest {
     }
 
     @Test
-    @Disabled
     void getMovieById_RestClient() {
 
         //given
         var movieInfoId = 1 ;
+        stubFor(get(urlPathEqualTo("/movies/v1/movie_infos/"+movieInfoId))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBodyFile("movie-info.json")));
+
+        stubFor(get(urlPathEqualTo("/movies/v1/reviews"))
+                //.withQueryParam("movieInfoId", )
+                .willReturn(WireMock.aResponse()
+                        .withStatus(HttpStatus.OK.value())
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBodyFile("reviews.json")));
+
 
         //when
         var movieMono = movieReactiveService.getMovieById_RestClient(movieInfoId);
