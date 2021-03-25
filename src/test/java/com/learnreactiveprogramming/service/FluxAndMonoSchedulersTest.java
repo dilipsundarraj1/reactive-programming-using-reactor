@@ -1,12 +1,11 @@
 package com.learnreactiveprogramming.service;
 
-import com.learnreactiveprogramming.service.FluxAndMonoThreadService;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
 
-class FluxAndMonoThreadTest {
+class FluxAndMonoSchedulersTest {
 
-    FluxAndMonoThreadService fluxAndMonoThread = new FluxAndMonoThreadService();
+    FluxAndMonoSchedulersService fluxAndMonoThread = new FluxAndMonoSchedulersService();
 
     @Test
     void explore_publishOn() {

@@ -10,16 +10,21 @@ import java.util.List;
 import static com.learnreactiveprogramming.util.CommonUtil.delay;
 
 @Slf4j
-public class FluxAndMonoThreadService {
+public class FluxAndMonoSchedulersService {
 
     static List<String> namesList = List.of("alex", "ben", "chloe");
     static List<String> namesList1 = List.of("adam", "jill", "jack");
 
     public Flux<String> explore_publishOn() {
+        // start without publish on
+        // add publishon Schedulers.parallel()
+        // add publishon Schedulers.boundedElastic() for the second flux
+
 
         var namesFlux = Flux.fromIterable(namesList)
                 .publishOn(Schedulers.parallel())
-                .map(this::upperCase);
+                .map(this::upperCase)
+                .log();
 
         var namesFlux1 = Flux.fromIterable(namesList1)
                 .publishOn(Schedulers.boundedElastic())
