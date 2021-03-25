@@ -1,0 +1,43 @@
+[{
+  "movieInfoId": 1,
+  "name": "Batman Begins",
+  "year": 2005,
+  "cast": ["Christian Bale", "Michael Cane"],
+  "release_date": "2005-06-15"
+}, {
+  "movieInfoId": 2,
+  "name": "The Dark Knight",
+  "year": 2008,
+  "cast": ["Christian Bale", "HeathLedger"],
+  "release_date": "2008-07-18"
+}, {
+  "movieInfoId": 3,
+  "name": "Dark Knight Rises",
+  "year": 2008,
+  "cast": ["Christian Bale", "Tom Hardy"],
+  "release_date": "2012-07-20"
+}, {
+  "movieInfoId": 4,
+  "name": "The Avengers",
+  "year": 2012,
+  "cast": ["Robert Downey Jr.", "Chris Evans", "Mark Ruffalo", "Chris Hemsworth", "Scarlett Johansson", "Jeremy Renner", "Tom Hiddleston", "Samuel L. Jackson"],
+  "release_date": "2012-04-11"
+}, {
+  "movieInfoId": 5,
+  "name": "Avengers: Age of Ultron",
+  "year": 2015,
+  "cast": ["Robert Downey Jr.", "Chris Evans", "Mark Ruffalo", "Chris Hemsworth", "Scarlett Johansson", "Jeremy Renner", "Tom Hiddleston", "Samuel L. Jackson", "Don Cheadle", "Idris Elba"],
+  "release_date": "2015-04-13"
+}, {
+  "movieInfoId": 6,
+  "name": "Avengers: Infinity War",
+  "year": 2018,
+  "cast": ["Robert Downey Jr.", "Chris Evans", "Mark Ruffalo", "Chris Hemsworth", "Scarlett Johansson", "Jeremy Renner", "Tom Hiddleston", "Samuel L. Jackson", "Don Cheadle", "Idris Elba", "Chris Patt", "Elizabeth Olsen", "Dave Bautista", "Benedict Cumberbatch", "Tom Holland", "Chadwick Boseman"],
+  "release_date": "2018-04-23"
+}, {
+  "movieInfoId": 7,
+  "name": "Avengers: Infinity War",
+  "year": 2019,
+  "cast": ["Robert Downey Jr.", "Chris Evans", "Mark Ruffalo", "Chris Hemsworth", "Scarlett Johansson", "Jeremy Renner", "Tom Hiddleston", "Samuel L. Jackson", "Don Cheadle", "Idris Elba", "Chris Patt", "Elizabeth Olsen", "Dave Bautista", "Benedict Cumberbatch", "Tom Holland", "Chadwick Boseman", "Gwyneth Paltrow", "Brie Larson"],
+  "release_date": "2019-04-22"
+}]
