@@ -3,7 +3,7 @@ package com.learnreactiveprogramming.service;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
 
-class FluxAndMonoSchedulersTest {
+class FluxAndMonoSchedulersServiceTest {
 
     FluxAndMonoSchedulersService fluxAndMonoThread = new FluxAndMonoSchedulersService();
 
