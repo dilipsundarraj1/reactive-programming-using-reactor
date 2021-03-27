@@ -99,7 +99,7 @@ public class FluxAndMonoSchedulersService {
     }
 
     public Flux<String> flux2() {
-        var namesFlux = Flux.fromIterable(namesList)
+        var namesFlux = Flux.fromIterable(namesList1)
                 .map(this::upperCase);
         return namesFlux;
     }
