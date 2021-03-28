@@ -18,7 +18,7 @@ public class BackpressureTest {
     @Test
     public void testBackPressure() throws Exception {
 
-        Flux<Integer> numberRange =  Flux.range(1, 100).log();
+        Flux<Integer> numberRange = Flux.range(1, 100).log();
 
         numberRange
                 .subscribe(new BaseSubscriber<>() {
@@ -29,8 +29,8 @@ public class BackpressureTest {
 
                     @Override
                     protected void hookOnNext(Integer value) {
-                        log.info("hookOnNext : {}" ,value);
-                        if(value == 2)
+                        log.info("hookOnNext : {}", value);
+                        if (value == 2)
                             cancel();
                     }
 
@@ -68,7 +68,7 @@ public class BackpressureTest {
     @Test
     public void testBackPressure_1() throws Exception {
 
-        Flux<Integer> numberRange =  Flux.range(1, 100).log();
+        Flux<Integer> numberRange = Flux.range(1, 100).log();
 
         CountDownLatch latch = new CountDownLatch(1);
         numberRange
@@ -82,10 +82,11 @@ public class BackpressureTest {
                     protected void hookOnNext(Integer value) {
                         // delay(1000);
                         System.out.println(value);
-                        if (value %2 == 0 && value <100) {
+                        if (value % 2 == 0 || value < 50) {
                             request(2);
-                        }else{
-                            hookOnComplete();
+                        } else {
+                            cancel();
+                            //hookOnCancel();
                         }
 
                     }
@@ -93,16 +94,12 @@ public class BackpressureTest {
                     @Override
                     protected void hookOnError(Throwable throwable) {
                         throwable.printStackTrace();
-                        latch.countDown();
+                        //latch.countDown();
                     }
 
                     @Override
                     protected void hookOnCancel() {
-                        latch.countDown();
-                    }
-
-                    @Override
-                    protected void hookOnComplete() {
+                        //cancel();
                         latch.countDown();
                     }
                 });
@@ -113,16 +110,17 @@ public class BackpressureTest {
      * Publisher produces more data than the consumer
      * onBackpressureDrop operator requests for the unbounded demand and drops the elements that are not needed by the subscriber
      * Use this when you would like
+     *
      * @throws Exception
      */
     @Test
     public void testBackPressure_drop() throws Exception {
 
-        Flux<Integer> numberRange =  Flux.range(1, 100).log();
+        Flux<Integer> numberRange = Flux.range(1, 100).log();
 
         CountDownLatch latch = new CountDownLatch(1);
         numberRange
-                .onBackpressureDrop(x->{
+                .onBackpressureDrop(x -> {
                     log.info("Dropped items are : {} ", x);
                 }) // This operator does two things
                 // 1. Makes the request as unbounded and stores the items in a queue
@@ -130,20 +128,24 @@ public class BackpressureTest {
                 .subscribe(new BaseSubscriber<>() {
                     @Override
                     protected void hookOnSubscribe(Subscription subscription) {
-                        request(2);
+                        request(50);
                     }
 
                     @Override
                     protected void hookOnNext(Integer value) {
-                        log.info("Next Value is : {}",value);
-                        if(value==2){ // once the value is 2 we are not going to request for any more data
+                        log.info("Next Value is : {}", value);
+                      /*  if (value == 2 ) { // once the value is 2 we are not going to request for any more data
+                            hookOnComplete();
+                        }*/
+
+                        if (value<=50 ) { // once the value is 2 we are not going to request for any more data
                             hookOnComplete();
                         }
                     }
 
                     @Override
                     protected void hookOnError(Throwable throwable) {
-                        log.error("Exception is : " , throwable);
+                        log.error("Exception is : ", throwable);
                         latch.countDown();
                     }
 
@@ -162,19 +164,20 @@ public class BackpressureTest {
 
     /**
      * onBackpressureBuffer operator requests for the unbounded demand
-     *  1. Stores the values in an internal queue
-     *  2. Pass the values to the subscriber when data is requested from the subscriber
+     * 1. Stores the values in an internal queue
+     * 2. Pass the values to the subscriber when data is requested from the subscriber
+     *
      * @throws Exception
      */
     @Test
     public void testBackPressure_buffer() throws Exception {
 
-        Flux<Integer> numberRange =  Flux.range(1, 100).log();
+        Flux<Integer> numberRange = Flux.range(1, 100).log();
 
         CountDownLatch latch = new CountDownLatch(1);
         numberRange
                 //.onBackpressureBuffer()
-                .onBackpressureBuffer(10, (i )->{
+                .onBackpressureBuffer(10, (i) -> {
                     log.info("Last Buffered element is : {}", i);
                 })
                 .subscribe(new BaseSubscriber<>() {
@@ -185,17 +188,17 @@ public class BackpressureTest {
 
                     @Override
                     protected void hookOnNext(Integer value) {
-                        log.info("Next Value is : {}",value);
-                        if (value %2 == 0 && value <20) {
+                        log.info("Next Value is : {}", value);
+                        if (value % 2 == 0 && value < 20) {
                             request(2);
-                        }else{
+                        } else {
                             hookOnComplete();
                         }
                     }
 
                     @Override
                     protected void hookOnError(Throwable throwable) {
-                        log.error("Exception is : " , throwable);
+                        log.error("Exception is : ", throwable);
                         latch.countDown();
                     }
 
@@ -214,17 +217,18 @@ public class BackpressureTest {
 
     /**
      * onBackpressureError operator requests for the unbounded demand
-     *  1. Throws an Error if the publisher emits more data than requested
+     * 1. Throws an Error if the publisher emits more data than requested
+     *
      * @throws Exception
      */
     @Test
     public void testBackPressure_error() throws Exception {
 
-        Flux<Integer> numberRange =  Flux.range(1, 100).log();
+        Flux<Integer> numberRange = Flux.range(1, 100).log();
 
         CountDownLatch latch = new CountDownLatch(1);
         numberRange
-                .onBackpressureError()
+                //.onBackpressureError()
                 .subscribe(new BaseSubscriber<>() {
                     @Override
                     protected void hookOnSubscribe(Subscription subscription) {
@@ -233,17 +237,17 @@ public class BackpressureTest {
 
                     @Override
                     protected void hookOnNext(Integer value) {
-                        log.info("Next Value is : {}",value);
-                        if (value %2 == 0 && value <20) {
+                        log.info("Next Value is : {}", value);
+                        if (value % 2 == 0 && value < 20) {
                             request(2);
-                        }else{
+                        } else {
                             hookOnComplete();
                         }
                     }
 
                     @Override
                     protected void hookOnError(Throwable throwable) {
-                        log.error("Exception is : " , throwable);
+                        log.error("Exception is : ", throwable);
                         latch.countDown();
                     }
 
@@ -262,12 +266,13 @@ public class BackpressureTest {
 
     /**
      * Need to figure this out
+     *
      * @throws Exception
      */
     @Test
     public void testBackPressure_latest() throws Exception {
 
-        Flux<Integer> numberRange =  Flux.range(1, 100).log();
+        Flux<Integer> numberRange = Flux.range(1, 100).log();
 
         CountDownLatch latch = new CountDownLatch(1);
         numberRange
@@ -285,17 +290,17 @@ public class BackpressureTest {
 
                     @Override
                     protected void hookOnNext(Integer value) {
-                        log.info("Next Value is : {}",value);
-                        if (value %2 == 0 && value <20) {
+                        log.info("Next Value is : {}", value);
+                        if (value % 2 == 0 && value < 20) {
                             delay(1000);
-                        }else{
+                        } else {
                             hookOnComplete();
                         }
                     }
 
                     @Override
                     protected void hookOnError(Throwable throwable) {
-                        log.error("Exception is : " , throwable);
+                        log.error("Exception is : ", throwable);
                         latch.countDown();
                     }
 
