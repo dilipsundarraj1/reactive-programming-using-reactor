@@ -662,11 +662,11 @@ class FluxAndMonoGeneratorServiceTest {
         var e = new RuntimeException("Not a valid state");
 
         //when
-        var flux = fluxAndMonoGeneratorService.explore_OnErrorMap(e).log();
+        var flux = fluxAndMonoGeneratorService.explore_OnErrorMap_checkpoint(e).log();
 
         //then
         StepVerifier.create(flux)
-                .expectNext("A")
+                .expectNext("A","B","C")
                 .expectError(ReactorException.class)
                 .verify();
     }

@@ -62,6 +62,28 @@ public class FluxAndMonoSchedulersService {
         return namesFlux;
     }
 
+    public Flux<String> explore_parallel_usingFlatMap1() {
+
+        var namesFlux = Flux.fromIterable(namesList)
+                .flatMap(name -> Mono.just(name)
+                        .map(this::upperCase)
+                        .subscribeOn(Schedulers.parallel()))
+                .log();
+
+        var namesFlux1 = Flux.fromIterable(namesList1)
+                .flatMap(name -> Mono.just(name)
+                        .map(this::upperCase)
+                        .subscribeOn(Schedulers.parallel()))
+                .log();
+
+        return namesFlux.mergeWith(namesFlux1);
+    }
+
+
+
+
+
+
     public Flux<String> explore_parallel_usingFlatMapSequential() {
 
         var namesFlux = Flux.fromIterable(namesList)
@@ -75,6 +97,8 @@ public class FluxAndMonoSchedulersService {
 
         return namesFlux;
     }
+
+
 
     public ParallelFlux<String> explore_parallel_1() {
         // start without publish on
