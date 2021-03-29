@@ -2,6 +2,8 @@ package com.learnreactiveprogramming.service;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.ParallelFlux;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
@@ -37,6 +39,68 @@ public class FluxAndMonoSchedulersService {
 
         return namesFlux.mergeWith(namesFlux1);
     }
+
+    public ParallelFlux<String> explore_parallel() {
+
+        var namesFlux = Flux.fromIterable(namesList)
+                .parallel()
+                .runOn(Schedulers.parallel())
+                .map(this::upperCase)
+                .log();
+
+        return namesFlux;
+    }
+
+    public Flux<String> explore_parallel_usingFlatMap() {
+
+        var namesFlux = Flux.fromIterable(namesList)
+                .flatMap(name -> Mono.just(name)
+                        .map(this::upperCase)
+                        .subscribeOn(Schedulers.parallel()))
+                        .log();
+
+        return namesFlux;
+    }
+
+    public Flux<String> explore_parallel_usingFlatMapSequential() {
+
+        var namesFlux = Flux.fromIterable(namesList)
+                .flatMapSequential(name -> {
+                    return Mono.just(name)
+                            .map(this::upperCase)
+                            .subscribeOn(Schedulers.parallel());
+
+                })
+                .log();
+
+        return namesFlux;
+    }
+
+    public ParallelFlux<String> explore_parallel_1() {
+        // start without publish on
+        // add publishon Schedulers.parallel()
+        // add publishon Schedulers.boundedElastic() for the second flux
+
+
+        var namesFlux = Flux.fromIterable(namesList)
+                .publishOn(Schedulers.parallel())
+                .map(this::upperCase)
+                .log();
+
+        var namesFlux1 = Flux.fromIterable(namesList1)
+                .publishOn(Schedulers.boundedElastic())
+                .map(this::upperCase)
+                .map((s) -> {
+                    log.info("Value of s is {}", s);
+                    return s;
+                })
+                .log();
+
+        return namesFlux.mergeWith(namesFlux1)
+                .parallel()
+                .runOn(Schedulers.parallel());
+    }
+
 
     public Flux<String> explore_subscribeOn() {
         var namesFlux = flux1()

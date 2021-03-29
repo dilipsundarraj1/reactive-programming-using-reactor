@@ -176,11 +176,10 @@ public class BackpressureTest {
 
         CountDownLatch latch = new CountDownLatch(1);
         numberRange
-                //.onBackpressureBuffer()
-                //.onBackpressureBuffer(10, BufferOverflowStrategy.ERROR)
-                .onBackpressureBuffer(10, (i) -> {
+                .onBackpressureBuffer(10, BufferOverflowStrategy.ERROR)
+                /*.onBackpressureBuffer(10, (i) -> {
                     log.info("Last Buffered element is : {}", i);
-                })
+                })*/
                 .subscribe(new BaseSubscriber<>() {
                     @Override
                     protected void hookOnSubscribe(Subscription subscription) {
@@ -227,9 +226,9 @@ public class BackpressureTest {
 
         Flux<Integer> numberRange = Flux.range(1, 100).log();
 
-       // CountDownLatch latch = new CountDownLatch(1);
+        CountDownLatch latch = new CountDownLatch(1);
         numberRange
-                //.onBackpressureError()
+                .onBackpressureError()
                 .subscribe(new BaseSubscriber<>() {
                     @Override
                     protected void hookOnSubscribe(Subscription subscription) {
@@ -239,31 +238,31 @@ public class BackpressureTest {
                     @Override
                     protected void hookOnNext(Integer value) {
                         log.info("Next Value is : {}", value);
-                        if (value % 2 == 0 && value < 20) {
-                            request(2);
-                        } else {
-                            hookOnComplete();
+                        if(value<50){
+                            request(1);
+                        }else{
+                            hookOnCancel();
                         }
                     }
 
                     @Override
                     protected void hookOnError(Throwable throwable) {
                         log.error("Exception is : ", throwable);
-                        //latch.countDown();
+                        latch.countDown();
                     }
 
                     @Override
                     protected void hookOnCancel() {
 
-                        //latch.countDown();
+                        latch.countDown();
                     }
 
                     @Override
                     protected void hookOnComplete() {
-                        //latch.countDown();
+                        latch.countDown();
                     }
                 });
-        //assertTrue(latch.await(5L, TimeUnit.SECONDS));
+        assertTrue(latch.await(5L, TimeUnit.SECONDS));
     }
 
     /**
