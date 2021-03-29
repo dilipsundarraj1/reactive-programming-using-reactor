@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Subscription;
 import reactor.core.publisher.BaseSubscriber;
+import reactor.core.publisher.BufferOverflowStrategy;
 import reactor.core.publisher.Flux;
 
 import java.util.concurrent.CountDownLatch;
@@ -138,7 +139,7 @@ public class BackpressureTest {
                         if (value % 2 == 0 || value < 50) {
                             request(2);
                         } else {
-                            cancel();
+                            //cancel();
                         }
 
                     }
@@ -176,6 +177,7 @@ public class BackpressureTest {
         CountDownLatch latch = new CountDownLatch(1);
         numberRange
                 //.onBackpressureBuffer()
+                //.onBackpressureBuffer(10, BufferOverflowStrategy.ERROR)
                 .onBackpressureBuffer(10, (i) -> {
                     log.info("Last Buffered element is : {}", i);
                 })
@@ -188,10 +190,10 @@ public class BackpressureTest {
                     @Override
                     protected void hookOnNext(Integer value) {
                         log.info("Next Value is : {}", value);
-                        if (value % 2 == 0 && value < 20) {
-                            request(2);
-                        } else {
-                            hookOnComplete();
+                        if(value<50){
+                            request(1);
+                        }else{
+                            hookOnCancel();
                         }
                     }
 
