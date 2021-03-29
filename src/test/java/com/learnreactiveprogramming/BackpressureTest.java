@@ -183,7 +183,7 @@ public class BackpressureTest {
                 .subscribe(new BaseSubscriber<>() {
                     @Override
                     protected void hookOnSubscribe(Subscription subscription) {
-                        request(2);
+                        request(1);
                     }
 
                     @Override
@@ -232,7 +232,7 @@ public class BackpressureTest {
                 .subscribe(new BaseSubscriber<>() {
                     @Override
                     protected void hookOnSubscribe(Subscription subscription) {
-                        request(2);
+                        request(1);
                     }
 
                     @Override
