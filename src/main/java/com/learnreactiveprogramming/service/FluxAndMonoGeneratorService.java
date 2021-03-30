@@ -466,7 +466,7 @@ public class FluxAndMonoGeneratorService {
 
         var flux = Flux.just("A", "B", "C")
                 .concatWith(Flux.error(e))
-                .checkpoint("errorspot")
+               // .checkpoint("errorspot")
                 .onErrorMap((exception) -> {
                     log.error("Exception is : ", exception);
                     // difference between errorResume and this one is that you dont need to add

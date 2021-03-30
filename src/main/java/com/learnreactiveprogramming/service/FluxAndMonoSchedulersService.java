@@ -102,6 +102,8 @@ public class FluxAndMonoSchedulersService {
         return namesFlux;
     }
 
+
+
     public ParallelFlux<String> explore_parallel_1() {
         // start without publish on
         // add publishon Schedulers.parallel()
