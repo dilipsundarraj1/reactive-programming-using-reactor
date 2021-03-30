@@ -42,6 +42,8 @@ public class FluxAndMonoSchedulersService {
 
     public ParallelFlux<String> explore_parallel() {
 
+        log.info("no of cores : {}", Runtime.getRuntime().availableProcessors());
+
         var namesFlux = Flux.fromIterable(namesList)
                 .parallel()
                 .runOn(Schedulers.parallel())
@@ -60,6 +62,30 @@ public class FluxAndMonoSchedulersService {
                         .log();
 
         return namesFlux;
+    }
+
+    public Flux<String> explore_parallel_usingFlatMap_1() {
+        // start without publish on
+        // add publishon Schedulers.parallel()
+        // add publishon Schedulers.boundedElastic() for the second flux
+
+        var namesFlux = Flux.fromIterable(namesList)
+                .flatMap(name -> Mono.just(name)
+                        .map(this::upperCase)
+                        .subscribeOn(Schedulers.parallel()))
+                .log();
+
+        var namesFlux1 = Flux.fromIterable(namesList1)
+                .flatMap(name -> Mono.just(name)
+                        .map(this::upperCase)
+                        .subscribeOn(Schedulers.parallel()))
+                .map((s) -> {
+                    log.info("Value of s is {}", s);
+                    return s;
+                })
+                .log();
+
+        return namesFlux.mergeWith(namesFlux1);
     }
 
     public Flux<String> explore_parallel_usingFlatMapSequential() {
