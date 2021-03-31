@@ -32,7 +32,7 @@ public class VirutalTimerTest {
                 .log();
 
         StepVerifier.withVirtualTime(()->flux)
-                .thenAwait(Duration.ofSeconds(5))
+                .thenAwait(Duration.ofSeconds(10))
                 .expectNext(1,2,3,4,5)
                 .verifyComplete();
     }

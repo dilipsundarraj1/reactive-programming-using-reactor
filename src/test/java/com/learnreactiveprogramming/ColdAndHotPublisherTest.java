@@ -3,10 +3,12 @@ package com.learnreactiveprogramming;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
 
 import java.time.Duration;
 
 import static com.learnreactiveprogramming.util.CommonUtil.delay;
+import static reactor.core.publisher.Sinks.EmitFailureHandler.FAIL_FAST;
 
 public class ColdAndHotPublisherTest {
 
@@ -30,9 +32,9 @@ public class ColdAndHotPublisherTest {
 
         ConnectableFlux<Integer> connectableFlux = stringFlux.publish();
         connectableFlux.connect();
-
-        connectableFlux.subscribe(s -> System.out.println("Subscriber 1 : " + s));
         Thread.sleep(3000);
+        connectableFlux.subscribe(s -> System.out.println("Subscriber 1 : " + s));
+        Thread.sleep(1000);
         connectableFlux.subscribe(s -> System.out.println("Subscriber 2 : " + s)); // does not get the values from beginning
         Thread.sleep(10000);
 
@@ -51,7 +53,7 @@ public class ColdAndHotPublisherTest {
         var hotSource = stringFlux.publish().autoConnect(2);
 
         hotSource.subscribe(s -> System.out.println("Subscriber 1 : " + s));
-        delay(1000);
+        delay(2000);
         hotSource.subscribe(s -> System.out.println("Subscriber 2 : " + s)); // does not get the values from beginning
         System.out.println("Two subscribers connected");
         delay(2000);
@@ -65,7 +67,7 @@ public class ColdAndHotPublisherTest {
 
         Flux<Integer> stringFlux = Flux.range(1, 10)
                 .doOnSubscribe(s -> {
-                    System.out.println("Subscription started");
+                    System.out.println("Subscription reeived");
                 })
                 .doOnCancel(() -> {
                     System.out.println("Received Cancel Signal");
@@ -81,12 +83,13 @@ public class ColdAndHotPublisherTest {
         System.out.println("Two subscribers connected");
         delay(2000);
         disposable.dispose();
-        disposable1.dispose();
+        //disposable1.dispose();
         hotSource.subscribe(s -> System.out.println("Subscriber 3 : " + s)); // does not get the values from beginning
 
         // Run by showing the above code and then enable the below code and run it.
         /*delay(2000);
         hotSource.subscribe(s -> System.out.println("Subscriber 4: " + s)); // does not get the values from beginning
-        Thread.sleep(10000);*/
+        */
+        delay(10000);
     }
 }
