@@ -466,7 +466,7 @@ public class FluxAndMonoGeneratorService {
 
         var flux = Flux.just("A", "B", "C")
                 .concatWith(Flux.error(e))
-               // .checkpoint("errorspot")
+               //.checkpoint("errorspot")
                 .onErrorMap((exception) -> {
                     log.error("Exception is : ", exception);
                     // difference between errorResume and this one is that you dont need to add
@@ -585,12 +585,12 @@ public class FluxAndMonoGeneratorService {
     }
 
 
-    public Flux<String> explore_generate() {
+    public Flux<Integer> explore_generate() {
 
-        Flux<String> flux = Flux.generate(
+        Flux<Integer> flux = Flux.generate(
                 () -> 0,
                 (state, sink) -> {
-                    sink.next(state + "");
+                    sink.next(state);
                     if (state == 2) {
                         sink.complete();
                     }
@@ -613,6 +613,20 @@ public class FluxAndMonoGeneratorService {
 
             sendEvents(sink);
 
+        });
+
+        return flux;
+    }
+
+    public Flux<String> explore_create_1() {
+
+        var names = List.of("alex","ben", "chloe");
+        Flux<String> flux = Flux.create(sink -> {
+            names.forEach(s->{
+                sink.next(s);
+            });
+            sink.complete();
+            sendEvents(sink);
         });
 
         return flux;

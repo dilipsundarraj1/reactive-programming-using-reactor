@@ -123,7 +123,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(namesFlux)
-                .expectNext("A","L","E","X","C","H","L","O","E")
+                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
                 .verifyComplete();
 
     }
@@ -242,7 +242,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(namesFlux)
-                .expectNext("D","E","F","A","U","L","T")
+                .expectNext("D", "E", "F", "A", "U", "L", "T")
                 //.expectNextCount(5)
                 .verifyComplete();
 
@@ -311,7 +311,6 @@ class FluxAndMonoGeneratorServiceTest {
     }
 
 
-
     @Test
     void explore_concatWith() {
 
@@ -352,7 +351,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(value)
-               // .expectNext("A", "B", "C", "D", "E", "F")
+                // .expectNext("A", "B", "C", "D", "E", "F")
                 .expectNext("A", "D", "B", "E", "C", "F")
                 .verifyComplete();
 
@@ -400,7 +399,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(value)
-                .expectNext("A","B","C","D","E","F")
+                .expectNext("A", "B", "C", "D", "E", "F")
                 .verifyComplete();
 
     }
@@ -415,7 +414,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(value)
-                .expectNext("AD","BE", "CF")
+                .expectNext("AD", "BE", "CF")
                 .verifyComplete();
 
     }
@@ -430,7 +429,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(value)
-                .expectNext("AD14","BE25", "CF36")
+                .expectNext("AD14", "BE25", "CF36")
                 .verifyComplete();
 
     }
@@ -461,7 +460,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(value)
-                .expectNext("AD","BE", "CF")
+                .expectNext("AD", "BE", "CF")
                 .verifyComplete();
 
     }
@@ -546,7 +545,6 @@ class FluxAndMonoGeneratorServiceTest {
     }
 
 
-
     @Test
     void explore_OnErrorResume() {
 
@@ -558,7 +556,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(flux)
-                .expectNext("A", "B", "C", "D","E","F")
+                .expectNext("A", "B", "C", "D", "E", "F")
                 .verifyComplete();
 
     }
@@ -598,11 +596,10 @@ class FluxAndMonoGeneratorServiceTest {
     }
 
     @Test
-    /**
-     * This gives you the stack trace
-     */
     void explore_OnErrorMap_checkpoint() {
 
+        /*Error has been observed at the following site(s):
+	        |_ checkpoint ⇢ errorspot*/
         //given
         var e = new RuntimeException("Not a valid state");
 
@@ -647,9 +644,6 @@ class FluxAndMonoGeneratorServiceTest {
     }
 
 
-
-
-
     @Test
     /**
      * This gives the visibility of which operator caused the problem without any performance overhead
@@ -666,7 +660,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(flux)
-                .expectNext("A","B","C")
+                .expectNext("A", "B", "C")
                 .expectError(ReactorException.class)
                 .verify();
     }
@@ -699,11 +693,10 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(flux)
-                .expectNext("A", "C","D")
+                .expectNext("A", "C", "D")
                 .verifyComplete();
 
     }
-
 
 
     @Test
@@ -712,7 +705,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono_exception();
+        var mono = fluxAndMonoGeneratorService.exception_mono_exception();
 
         //then
         StepVerifier.create(mono)
@@ -727,7 +720,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono_exception();
+        var mono = fluxAndMonoGeneratorService.exception_mono_exception();
 
         //then
         StepVerifier.create(mono)
@@ -744,7 +737,7 @@ class FluxAndMonoGeneratorServiceTest {
 
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorResume(e);
+        var mono = fluxAndMonoGeneratorService.exception_mono_onErrorResume(e);
 
         //then
         StepVerifier.create(mono)
@@ -759,7 +752,7 @@ class FluxAndMonoGeneratorServiceTest {
 
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorReturn();
+        var mono = fluxAndMonoGeneratorService.exception_mono_onErrorReturn();
 
         //then
         StepVerifier.create(mono)
@@ -775,7 +768,7 @@ class FluxAndMonoGeneratorServiceTest {
 
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorMap(e);
+        var mono = fluxAndMonoGeneratorService.exception_mono_onErrorMap(e);
 
         //then
         StepVerifier.create(mono)
@@ -790,7 +783,7 @@ class FluxAndMonoGeneratorServiceTest {
         var input = "abc";
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorContinue(input);
+        var mono = fluxAndMonoGeneratorService.exception_mono_onErrorContinue(input);
 
         //then
         StepVerifier.create(mono)
@@ -804,7 +797,7 @@ class FluxAndMonoGeneratorServiceTest {
         var input = "reactor";
 
         //when
-        var mono=fluxAndMonoGeneratorService.exception_mono_onErrorContinue(input);
+        var mono = fluxAndMonoGeneratorService.exception_mono_onErrorContinue(input);
 
         //then
         StepVerifier.create(mono)
@@ -822,7 +815,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(zipFlux)
-                .expectNext("0","1","2")
+                .expectNext(0, 1, 2)
                 .verifyComplete();
 
     }
@@ -850,7 +843,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-       var mono =  fluxAndMonoGeneratorService.explore_mono_create();
+        var mono = fluxAndMonoGeneratorService.explore_mono_create();
 
         //then
         StepVerifier.create(mono)
@@ -874,8 +867,6 @@ class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
 
     }
-
-
 
 
     @Test
