@@ -602,7 +602,7 @@ public class FluxAndMonoGeneratorService {
 
     public Flux<String> explore_create() {
 
-        Flux<String> flux = Flux.create(sink -> {
+        return Flux.create(sink -> {
             CompletableFuture.supplyAsync(() -> names()) // place the blocking call inside the create function
                     .thenAccept(names -> {
                         names.forEach(sink::next);
@@ -614,8 +614,6 @@ public class FluxAndMonoGeneratorService {
             sendEvents(sink);
 
         });
-
-        return flux;
     }
 
     public Mono<String> explore_create_mono() {
