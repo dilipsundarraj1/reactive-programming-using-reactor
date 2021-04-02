@@ -815,7 +815,8 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(zipFlux)
-                .expectNext(0, 1, 2)
+                .expectNext( 2, 4)
+                .expectNextCount(8)
                 .verifyComplete();
 
     }

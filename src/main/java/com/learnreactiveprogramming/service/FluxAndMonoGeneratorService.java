@@ -588,10 +588,10 @@ public class FluxAndMonoGeneratorService {
     public Flux<Integer> explore_generate() {
 
         Flux<Integer> flux = Flux.generate(
-                () -> 0,
+                () -> 1,
                 (state, sink) -> {
-                    sink.next(state);
-                    if (state == 2) {
+                    sink.next(state*2);
+                    if (state == 10) {
                         sink.complete();
                     }
                     return state + 1;
@@ -618,13 +618,18 @@ public class FluxAndMonoGeneratorService {
         return flux;
     }
 
+    public Mono<String> explore_create_mono() {
+        Mono<String> mono = Mono.create(sink -> {
+                sink.success("success");
+        });
+        return mono;
+    }
+
     public Flux<String> explore_create_1() {
 
         var names = List.of("alex","ben", "chloe");
         Flux<String> flux = Flux.create(sink -> {
-            names.forEach(s->{
-                sink.next(s);
-            });
+            names.forEach(sink::next);
             sink.complete();
             sendEvents(sink);
         });
