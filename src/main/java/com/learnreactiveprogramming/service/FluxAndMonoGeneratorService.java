@@ -654,6 +654,16 @@ public class FluxAndMonoGeneratorService {
         return flux;
     }
 
+    public Flux<String> explore_handle() {
+        var namesList = List.of("alex", "ben", "chloe");
+        return Flux.fromIterable(namesList)
+                .handle((name,sink)->{
+                    if(name.length()>3)
+                        sink.next(name);
+                });
+
+    }
+
 
     public Mono<String> explore_mono_create() {
 

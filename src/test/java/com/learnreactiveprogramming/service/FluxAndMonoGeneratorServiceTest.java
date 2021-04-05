@@ -873,6 +873,22 @@ class FluxAndMonoGeneratorServiceTest {
 
     }
 
+    @Test
+    void explore_handle() {
+
+        //given
+
+        //when
+        var flux = fluxAndMonoGeneratorService.explore_handle().log();
+
+        //then
+        StepVerifier.create(flux)
+                //.expectNext("alex", "ben", "chloe")
+                .expectNextCount(2)
+                .verifyComplete();
+
+    }
+
 
     @Test
     void explore_mono_create() {
