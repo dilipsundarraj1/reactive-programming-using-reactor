@@ -20,10 +20,6 @@ import static com.learnreactiveprogramming.util.CommonUtil.delay;
 @Slf4j
 public class FluxAndMonoGeneratorService {
 
-    public static List<String> names() {
-
-        return List.of("alex", "ben", "chloe");
-    }
 
     public Flux<String> namesFlux() {
         var namesList = List.of("alex", "ben", "chloe");
@@ -69,6 +65,7 @@ public class FluxAndMonoGeneratorService {
     }
 
     public Mono<String> namesMono() {
+
         return Mono.just("alex");
 
     }
@@ -466,7 +463,7 @@ public class FluxAndMonoGeneratorService {
 
         var flux = Flux.just("A", "B", "C")
                 .concatWith(Flux.error(e))
-               //.checkpoint("errorspot")
+                //.checkpoint("errorspot")
                 .onErrorMap((exception) -> {
                     log.error("Exception is : ", exception);
                     // difference between errorResume and this one is that you dont need to add
@@ -590,7 +587,7 @@ public class FluxAndMonoGeneratorService {
         Flux<Integer> flux = Flux.generate(
                 () -> 1,
                 (state, sink) -> {
-                    sink.next(state*2);
+                    sink.next(state * 2);
                     if (state == 10) {
                         sink.complete();
                     }
@@ -600,9 +597,19 @@ public class FluxAndMonoGeneratorService {
         return flux;
     }
 
+    public static List<String> names() {
+        delay(1000);
+        return List.of("alex", "ben", "chloe");
+    }
+
     public Flux<String> explore_create() {
 
         return Flux.create(sink -> {
+            //1. Start with this code
+            /*names().forEach(sink::next);
+            sink.complete();*/
+
+            //2. Finish with this code
             CompletableFuture.supplyAsync(() -> names()) // place the blocking call inside the create function
                     .thenAccept(names -> {
                         names.forEach(sink::next);
@@ -613,46 +620,20 @@ public class FluxAndMonoGeneratorService {
 
             sendEvents(sink);
 
-        });
+        }, FluxSink.OverflowStrategy.BUFFER);
     }
 
     public Mono<String> explore_create_mono() {
         Mono<String> mono = Mono.create(sink -> {
-                sink.success("success");
+            CompletableFuture.supplyAsync(()->name())
+                    .thenAccept(name->sink.success(name));
         });
         return mono;
     }
 
-    public Flux<String> explore_create_1() {
-
-        var names = List.of("alex","ben", "chloe");
-        Flux<String> flux = Flux.create(sink -> {
-            names.forEach(sink::next);
-            sink.complete();
-            sendEvents(sink);
-        });
-
-        return flux;
-    }
-
-    public Mono<String> explore_mono_create() {
-
-        Mono<String> abc = Mono.create(sink -> {
-            delay(1000);
-            sink.success("abc");
-        });
-
-        return abc;
-    }
-
-    public Mono<String> explore_monoFromCallable() {
-
-        Mono<String> abc = Mono.fromCallable(() -> {
-            delay(1000);
-            return "abc";
-        });
-
-        return abc;
+    private String name() {
+        delay(1000);
+        return  "alex";
     }
 
     public Flux<String> explore_push() {
@@ -670,35 +651,32 @@ public class FluxAndMonoGeneratorService {
 
             sendEvents(sink);
         });
-
         return flux;
+    }
+
+
+    public Mono<String> explore_mono_create() {
+
+        Mono<String> abc = Mono.create(sink -> {
+            delay(1000);
+            sink.success("abc");
+        });
+
+        return abc;
     }
 
     public void sendEvents(FluxSink<String> sink) {
         {
-            CompletableFuture.supplyAsync(() -> names()
-                    , Executors.newFixedThreadPool(3)) // place the blocking call inside the create function
+            CompletableFuture.supplyAsync(() -> names()) // place the blocking call inside the create function
                     .thenAccept(names -> {
                         names.forEach((s) -> {
                             sink.next(s);
                         });
                     })
-                    .thenRun(sink::complete);
+                    .thenRun(() -> {
+                        sink.complete();
+                    });
         }
-    }
-
-
-    public Flux<List<String>> generate_names() {
-
-        Flux<List<String>> flux = Flux.generate(
-                () -> names(),
-                (state, sink) -> {
-                    sink.next(state);
-                    sink.complete();
-                    return state;
-                });
-
-        return flux;
     }
 
     /***

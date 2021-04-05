@@ -7,6 +7,7 @@ import reactor.test.StepVerifier;
 import reactor.tools.agent.ReactorDebugAgent;
 
 import java.util.List;
+import java.util.Objects;
 
 class FluxAndMonoGeneratorServiceTest {
 
@@ -809,12 +810,13 @@ class FluxAndMonoGeneratorServiceTest {
     void explore_generate() {
 
         //given
+        //Demonstrate multiple emissions per round is not supported
 
         //when
-        var zipFlux = fluxAndMonoGeneratorService.explore_generate().log();
+        var flux = fluxAndMonoGeneratorService.explore_generate().log();
 
         //then
-        StepVerifier.create(zipFlux)
+        StepVerifier.create(flux)
                 .expectNext( 2, 4)
                 .expectNextCount(8)
                 .verifyComplete();
@@ -828,15 +830,49 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var zipFlux = fluxAndMonoGeneratorService.explore_create().log();
+        var flux = fluxAndMonoGeneratorService.explore_create().log();
 
         //then
-        StepVerifier.create(zipFlux)
+        StepVerifier.create(flux)
                 //.expectNext("alex", "ben", "chloe")
                 .expectNextCount(6)
                 .verifyComplete();
 
     }
+
+    @Test
+    void explore_create_mono() {
+
+        //given
+
+        //when
+        var mono = fluxAndMonoGeneratorService.explore_create_mono().log();
+
+        //then
+        StepVerifier.create(mono)
+                //.expectNext("alex", "ben", "chloe")
+                .expectNext("alex")
+                .verifyComplete();
+
+    }
+
+    @Test
+    void explore_push() {
+
+        //given
+
+        //when
+        var flux = fluxAndMonoGeneratorService.explore_push().log();
+
+        //then
+        StepVerifier.create(flux)
+               //.expectNext("alex", "ben", "chloe")
+                .expectNextCount(3)
+                .thenConsumeWhile(Objects::nonNull)
+                .verifyComplete();
+
+    }
+
 
     @Test
     void explore_mono_create() {
@@ -852,23 +888,6 @@ class FluxAndMonoGeneratorServiceTest {
                 .verifyComplete();
 
     }
-
-    @Test
-    void explore_push() {
-
-        //given
-
-        //when
-        var zipFlux = fluxAndMonoGeneratorService.explore_push().log();
-
-        //then
-        StepVerifier.create(zipFlux)
-                .expectNext("alex", "ben", "chloe")
-                //.expectNextCount(1)
-                .verifyComplete();
-
-    }
-
 
     @Test
     void namesFlux_flatmap_sequential() {
