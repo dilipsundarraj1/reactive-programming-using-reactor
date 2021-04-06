@@ -15,13 +15,10 @@ public class ColdAndHotPublisherTest {
     @Test
     public void coldPublisherTest() throws InterruptedException {
 
-        Flux<Integer> stringFlux = Flux.range(1, 10)
-                .delayElements(Duration.ofSeconds(1));
+        var flux = Flux.range(1, 10);
 
-        stringFlux.subscribe(s -> System.out.println("Subscriber 1 : " + s)); //emits the value from beginning
-        Thread.sleep(2000);
-        stringFlux.subscribe(s -> System.out.println("Subscriber 2 : " + s));//emits the value from beginning
-        Thread.sleep(10000);
+        flux.subscribe(s -> System.out.println("Subscriber 1 : " + s)); //emits the value from beginning
+        flux.subscribe(s -> System.out.println("Subscriber 2 : " + s));//emits the value from beginning
     }
 
     @Test
