@@ -49,11 +49,13 @@ public class ColdAndHotPublisherTest {
         // this "autoConnect" call needs to be connected to the publish method itself
         var hotSource = stringFlux.publish().autoConnect(2);
 
-        hotSource.subscribe(s -> System.out.println("Subscriber 1 : " + s));
+        var disposable = hotSource.subscribe(s -> System.out.println("Subscriber 1 : " + s));
         delay(2000);
-        hotSource.subscribe(s -> System.out.println("Subscriber 2 : " + s)); // does not get the values from beginning
+        var disposable1 =  hotSource.subscribe(s -> System.out.println("Subscriber 2 : " + s)); // does not get the values from beginning
         System.out.println("Two subscribers connected");
         delay(2000);
+        disposable.dispose();
+        disposable1.dispose();
         hotSource.subscribe(s -> System.out.println("Subscriber 3 : " + s)); // does not get the values from beginning
         Thread.sleep(10000);
 
@@ -80,13 +82,14 @@ public class ColdAndHotPublisherTest {
         System.out.println("Two subscribers connected");
         delay(2000);
         disposable.dispose();
-        //disposable1.dispose();
-        hotSource.subscribe(s -> System.out.println("Subscriber 3 : " + s)); // does not get the values from beginning
+        disposable1.dispose(); // this cancels the whole subscription
+        //  This does not start the subscriber to emit the values,because of minimum of 2 subscribers needed.
+        hotSource.subscribe(s -> System.out.println("Subscriber 3 : " + s));
 
         // Run by showing the above code and then enable the below code and run it.
-        /*delay(2000);
-        hotSource.subscribe(s -> System.out.println("Subscriber 4: " + s)); // does not get the values from beginning
-        */
+        delay(2000);
+        // By adding the fourth subscriber enables the minimum subscriber condition and it starts to emit the values
+        hotSource.subscribe(s -> System.out.println("Subscriber 4: " + s));
         delay(10000);
     }
 }
