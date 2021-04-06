@@ -4,8 +4,10 @@ import com.learnreactiveprogramming.exception.ReactorException;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Hooks;
 import reactor.test.StepVerifier;
+import reactor.test.scheduler.VirtualTimeScheduler;
 import reactor.tools.agent.ReactorDebugAgent;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
@@ -163,6 +165,23 @@ class FluxAndMonoGeneratorServiceTest {
                 .expectNextCount(5)
                 .verifyComplete();
 
+    }
+
+    @Test
+    void namesFlux_concatmap_withVirtualTime() {
+        //given
+        VirtualTimeScheduler.getOrSet();
+        int stringLength = 3;
+
+        //when
+        var namesFlux = fluxAndMonoGeneratorService.namesFlux_concatmap(stringLength);
+
+        //then
+        StepVerifier.withVirtualTime(()-> namesFlux)
+                .thenAwait(Duration.ofSeconds(10))
+                .expectNext("A","L","E","X","C","H","L","O","E")
+                //.expectNextCount(9)
+                .verifyComplete();
     }
 
     @Test
