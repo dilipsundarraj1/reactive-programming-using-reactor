@@ -614,11 +614,12 @@ public class FluxAndMonoGeneratorService {
                     .thenAccept(names -> {
                         names.forEach(sink::next);
                     })
+                    .thenRun(()-> sendEvents(sink))
                     .whenComplete((data, exception) -> {
                         sink.error(exception);
                     });
 
-            sendEvents(sink);
+            //sendEvents(sink);
 
         }, FluxSink.OverflowStrategy.BUFFER);
     }
@@ -645,11 +646,12 @@ public class FluxAndMonoGeneratorService {
                             sink.next(s);
                         });
                     })
+                    .thenRun(()-> sendEvents(sink))
                     .whenComplete((data, exception) -> {
                         sink.error(exception);
                     });
 
-            sendEvents(sink);
+           // sendEvents(sink);
         });
         return flux;
     }

@@ -887,7 +887,7 @@ class FluxAndMonoGeneratorServiceTest {
         StepVerifier.create(flux)
                //.expectNext("alex", "ben", "chloe")
                 .expectNextCount(3)
-                .thenConsumeWhile(Objects::nonNull)
+               // .thenConsumeWhile(Objects::nonNull)
                 .verifyComplete();
 
     }
