@@ -461,13 +461,15 @@ public class FluxAndMonoGeneratorService {
      */
     public Flux<String> explore_OnErrorMap_checkpoint(Exception e) {
 
-        var flux = Flux.just("A", "B", "C")
+        var flux = /*Flux.just("A", "B", "C")
                 .map(name -> {
                     if (name.equals("B")) {
                         throw new IllegalStateException("Exception Occurred");
                     }
                     return name;
-                })
+                })*/
+                Flux.just("A")
+                        .concatWith(Flux.error(e))
                 //.checkpoint("errorSpot")
                 .onErrorMap((exception) -> {
                     log.error("Exception is : " , exception);
@@ -479,7 +481,6 @@ public class FluxAndMonoGeneratorService {
         return flux;
 
     }
-
 
     public void exception() {
         try {
