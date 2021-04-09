@@ -462,15 +462,19 @@ public class FluxAndMonoGeneratorService {
     public Flux<String> explore_OnErrorMap_checkpoint(Exception e) {
 
         var flux = Flux.just("A", "B", "C")
-                .concatWith(Flux.error(e))
-                //.checkpoint("errorspot")
+                .map(name -> {
+                    if (name.equals("B")) {
+                        throw new IllegalStateException("Exception Occurred");
+                    }
+                    return name;
+                })
+                //.checkpoint("errorSpot")
                 .onErrorMap((exception) -> {
-                    log.error("Exception is : ", exception);
+                    log.error("Exception is : " , exception);
                     // difference between errorResume and this one is that you dont need to add
                     // Flux.error() to throw the exception
                     return new ReactorException(exception, exception.getMessage());
                 });
-
 
         return flux;
 

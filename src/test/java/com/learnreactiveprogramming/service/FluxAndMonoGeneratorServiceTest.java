@@ -621,6 +621,7 @@ class FluxAndMonoGeneratorServiceTest {
         /*Error has been observed at the following site(s):
 	        |_ checkpoint ⇢ errorspot*/
         //given
+        // In production, it could the code or the data thats executing in the run time that might throw the exception
         var e = new RuntimeException("Not a valid state");
 
         //when
@@ -628,10 +629,11 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(flux)
-                .expectNext("A", "B", "C")
+                .expectNext("A")
                 .expectError(ReactorException.class)
                 .verify();
     }
+
 
     @Test
     /**
@@ -658,7 +660,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(flux)
-                .expectNext("A", "B", "C")
+                .expectNext("A")
                 .expectError(ReactorException.class)
                 .verify();
     }
