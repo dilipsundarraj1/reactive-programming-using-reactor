@@ -681,7 +681,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(flux)
-                .expectNext("A", "B", "C")
+                .expectNext("A")
                 .expectError(ReactorException.class)
                 .verify();
     }
