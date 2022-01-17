@@ -34,7 +34,7 @@ class MovieInfoServiceTest {
     }
 
     @Test
-    void retrieveMovieInfoById() {
+    void retrieveMovieInfoById_RestClient() {
 
         //given
         Long movieInfoId = 1L;
