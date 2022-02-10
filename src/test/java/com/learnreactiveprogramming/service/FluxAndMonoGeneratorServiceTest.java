@@ -176,9 +176,9 @@ class FluxAndMonoGeneratorServiceTest {
         var namesFlux = fluxAndMonoGeneratorService.namesFlux_concatmap(stringLength);
 
         //then
-        StepVerifier.withVirtualTime(()-> namesFlux)
+        StepVerifier.withVirtualTime(() -> namesFlux)
                 .thenAwait(Duration.ofSeconds(10))
-                .expectNext("A","L","E","X","C","H","L","O","E")
+                .expectNext("A", "L", "E", "X", "C", "H", "L", "O", "E")
                 //.expectNextCount(9)
                 .verifyComplete();
     }
@@ -496,6 +496,22 @@ class FluxAndMonoGeneratorServiceTest {
         StepVerifier.create(value)
                 .expectNext("AB")
                 .verifyComplete();
+
+    }
+
+    @Test
+    void explore_zipWith_mono_delay() {
+
+        //given
+
+        //when
+        var value = fluxAndMonoGeneratorService.explore_zipWith_mono_delay().log();
+
+        //then
+        StepVerifier.create(value)
+                //.expectNext("AB")
+                .expectError()
+                .verify();
 
     }
 
@@ -837,7 +853,7 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(flux)
-                .expectNext( 2, 4)
+                .expectNext(2, 4)
                 .expectNextCount(8)
                 .verifyComplete();
 
@@ -886,9 +902,9 @@ class FluxAndMonoGeneratorServiceTest {
 
         //then
         StepVerifier.create(flux)
-               //.expectNext("alex", "ben", "chloe")
+                //.expectNext("alex", "ben", "chloe")
                 .expectNextCount(3)
-               // .thenConsumeWhile(Objects::nonNull)
+                // .thenConsumeWhile(Objects::nonNull)
                 .verifyComplete();
 
     }

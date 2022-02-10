@@ -2,11 +2,13 @@ package com.learnreactiveprogramming.service;
 
 import com.learnreactiveprogramming.exception.ReactorException;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
+import reactor.util.function.Tuple8;
 
 import java.time.Duration;
 import java.util.List;
@@ -351,6 +353,31 @@ public class FluxAndMonoGeneratorService {
 
     }
 
+    public Mono<Tuple8<Object, String, Object, Object, String, Object, Object, String>> explore_zipWith_mono_delay() {
+
+        var aMono = Mono.just("A");
+
+        var bMono = Mono.just("B");
+
+
+        return Mono.zipDelayError(
+                        Mono.error(new RuntimeException("Reason 1")),
+                        Mono.just("ok"),
+                        Mono.error(new RuntimeException("Reason 2")),
+                        Mono.error(new RuntimeException("Reason 3")),
+                        Mono.just("ok"),
+                        Mono.error(new RuntimeException("Reason 4")),
+                        Mono.error(new RuntimeException("Reason 5")),
+                        Mono.just("ok")
+                )
+                .onErrorMap(e -> {
+                            System.out.println("exception : " + e);
+                            return Exceptions.unwrapMultiple(e).stream()
+                                    .reduce((e1, e2) -> new RuntimeException(String.join(", ", e1.getMessage(), e2.getMessage()))).get();
+                        }
+                );
+    }
+
     public Flux<String> exception_flux() {
 
         var flux = Flux.just("A", "B", "C")
@@ -469,13 +496,13 @@ public class FluxAndMonoGeneratorService {
                 })*/
                 Flux.just("A")
                         .concatWith(Flux.error(e))
-                //.checkpoint("errorSpot")
-                .onErrorMap((exception) -> {
-                    log.error("Exception is : " , exception);
-                    // difference between errorResume and this one is that you dont need to add
-                    // Flux.error() to throw the exception
-                    return new ReactorException(exception, exception.getMessage());
-                });
+                        //.checkpoint("errorSpot")
+                        .onErrorMap((exception) -> {
+                            log.error("Exception is : ", exception);
+                            // difference between errorResume and this one is that you dont need to add
+                            // Flux.error() to throw the exception
+                            return new ReactorException(exception, exception.getMessage());
+                        });
 
         return flux;
 
@@ -527,7 +554,6 @@ public class FluxAndMonoGeneratorService {
                     throw new RuntimeException("Exception Occurred");
                 }).onErrorReturn("abc");
     }
-
 
     /***
      *  This operator can be used to resume from an exception.
@@ -618,7 +644,7 @@ public class FluxAndMonoGeneratorService {
                     .thenAccept(names -> {
                         names.forEach(sink::next);
                     })
-                    .thenRun(()-> sendEvents(sink))
+                    .thenRun(() -> sendEvents(sink))
                     .whenComplete((data, exception) -> {
                         sink.error(exception);
                     });
@@ -630,15 +656,15 @@ public class FluxAndMonoGeneratorService {
 
     public Mono<String> explore_create_mono() {
         Mono<String> mono = Mono.create(sink -> {
-            CompletableFuture.supplyAsync(()->name())
-                    .thenAccept(name->sink.success(name));
+            CompletableFuture.supplyAsync(() -> name())
+                    .thenAccept(name -> sink.success(name));
         });
         return mono;
     }
 
     private String name() {
         delay(1000);
-        return  "alex";
+        return "alex";
     }
 
     public Flux<String> explore_push() {
@@ -650,12 +676,12 @@ public class FluxAndMonoGeneratorService {
                             sink.next(s);
                         });
                     })
-                    .thenRun(()-> sendEvents(sink))
+                    .thenRun(() -> sendEvents(sink))
                     .whenComplete((data, exception) -> {
                         sink.error(exception);
                     });
 
-           // sendEvents(sink);
+            // sendEvents(sink);
         });
         return flux;
     }
@@ -663,8 +689,8 @@ public class FluxAndMonoGeneratorService {
     public Flux<String> explore_handle() {
         var namesList = List.of("alex", "ben", "chloe");
         return Flux.fromIterable(namesList)
-                .handle((name,sink)->{
-                    if(name.length()>3)
+                .handle((name, sink) -> {
+                    if (name.length() > 3)
                         sink.next(name);
                 });
 
